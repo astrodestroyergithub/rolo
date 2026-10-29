@@ -1,0 +1,20 @@
+{
+  "name": "rolo-coliving-rent-pg-online",
+  "version": "2.4.0",
+  "description": "Rolo Coliving - Rent PG Online: Next-generation managed coliving and PG booking platform powered by Netlify & NeonDB Serverless Postgres.",
+  "private": true,
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'Static bundle ready for Netlify deployment'",
+    "db:init": "psql $DATABASE_URL -f db/schema.sql && psql $DATABASE_URL -f db/seed.sql"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.36.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

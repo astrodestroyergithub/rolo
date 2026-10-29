@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <defs>
+    <linearGradient id="roloBg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="55%" stop-color="#DBEAFE"/>
+      <stop offset="100%" stop-color="#FEF3C7"/>
+    </linearGradient>
+    <linearGradient id="roloRoof" x1="10" y1="10" x2="54" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="roloSun" x1="38" y1="12" x2="52" y2="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+  <!-- Soft Light Squircle Base -->
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#roloBg)" stroke="#93C5FD" stroke-width="2.5"/>
+  <!-- Warm Sunshine Community Orb -->
+  <circle cx="46" cy="18" r="6" fill="url(#roloSun)"/>
+  <!-- Modern Coliving Roofline -->
+  <path d="M12 29L30 13L48 29" stroke="url(#roloRoof)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Geometric 'R' Home Monogram -->
+  <path d="M21 28V49M21 28H33C36.866 28 40 30.91 40 34.5C40 38.09 36.866 41 33 41H21M31 41L41 49" stroke="#0369A1" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Welcoming Doorway Warm Accent -->
+  <circle cx="21" cy="49" r="2.5" fill="#F59E0B"/>
+</svg>

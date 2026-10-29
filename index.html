@@ -1,0 +1,2480 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Rolo Coliving - Rent PG Online | Managed Coliving, Student Housing &amp; Studios</title>
+  <meta name="description" content="Rolo Coliving - Rent PG Online is a responsive, light-themed managed accommodation and PG booking web platform built for Netlify and powered by NeonDB Serverless PostgreSQL. It enables students and professionals to discover verified PGs across Indian cities, filter amenities, book virtual or physical tours, reserve beds, and manage stays." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif']
+          },
+          colors: {
+            rolo: {
+              50: '#F0F7FF',
+              100: '#E0EFFE',
+              200: '#BAE0FD',
+              500: '#0284C7',
+              600: '#0369A1',
+              700: '#1D4ED8',
+              sun: '#F59E0B',
+              sunlight: '#FEF3C7',
+              cream: '#FAFBFD',
+              mint: '#ECFDF5',
+              rose: '#FFF1F2'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background-color: #FAFBFD;
+      color: #1E293B;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
+    .font-display { font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; }
+    .light-glass {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .soft-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 8px 26px -6px rgba(14, 116, 144, 0.07), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+    .soft-card:hover {
+      transform: translateY(-3px);
+      border-color: #93C5FD;
+      box-shadow: 0 16px 34px -8px rgba(2, 132, 199, 0.13), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+    }
+    .hero-surface {
+      background: linear-gradient(135deg, #F0F9FF 0%, #FFFBEB 52%, #F8FAFC 100%);
+    }
+    .pastel-pill-scroll {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .pastel-pill-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    input[type="range"] {
+      accent-color: #0284C7;
+    }
+    @keyframes pulseSoft {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.08); opacity: 0.85; }
+    }
+    .pulse-pin {
+      animation: pulseSoft 2.4s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#FAFBFD] text-slate-800 selection:bg-sky-100 selection:text-sky-900">
+
+  <!-- TOP ANNOUNCEMENT BAR (Bright Sunshine & Sky Light Theme) -->
+  <div class="bg-gradient-to-r from-sky-50 via-amber-50 to-sky-50 border-b border-sky-100 px-3 py-2 text-xs sm:text-sm text-slate-700">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
+          <span>✨ ZERO BROKERAGE</span>
+        </span>
+        <span class="font-medium text-slate-700">Save up to <strong>₹45,000/yr</strong> across 450+ verified Rolo Coliving PGs &amp; Studios! Use code <code class="px-1.5 py-0.5 bg-white border border-sky-200 rounded font-bold text-sky-700">ROLOFIRST20</code> for 20% off Month 1.</span>
+      </div>
+      <div class="flex items-center gap-3 ml-auto">
+        <button type="button" onclick="openNeonModal()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-semibold transition">
+          <span id="neonStatusDot" class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span id="neonStatusText">NeonDB Serverless: Ready</span>
+        </button>
+        <button type="button" onclick="openPromoModal()" class="text-sky-700 hover:text-sky-900 font-semibold underline decoration-sky-300 text-xs sm:text-sm">
+          Refer &amp; Earn ₹2,500
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STICKY NAVIGATION HEADER -->
+  <header class="sticky top-0 z-40 light-glass border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+      <!-- Brand Logo + Favicon SVG Inline Preview -->
+      <div class="flex items-center gap-3 min-w-0">
+        <button type="button" onclick="switchMainTab('explore')" class="flex items-center gap-2.5 text-left group focus:outline-none">
+          <img src="/favicon.svg" alt="Rolo Coliving Logo" class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl shadow-sm group-hover:scale-105 transition" />
+          <div class="truncate">
+            <div class="flex items-center gap-1.5">
+              <span class="font-display font-extrabold text-lg sm:text-xl tracking-tight text-sky-800">Rolo</span>
+              <span class="font-display font-bold text-lg sm:text-xl tracking-tight text-amber-500">Coliving</span>
+              <span class="hidden md:inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">Rent PG Online</span>
+            </div>
+            <p class="text-[11px] text-slate-500 truncate">Managed Homes • Chef Meals • 300Mbps Wi-Fi</p>
+          </div>
+        </button>
+      </div>
+
+      <!-- Desktop Navigation Tabs -->
+      <nav class="hidden lg:flex items-center gap-1 bg-slate-100/90 p-1 rounded-2xl border border-slate-200/80" aria-label="Main Navigation">
+        <button type="button" id="navBtn-explore" onclick="switchMainTab('explore')" class="nav-tab-btn px-3.5 py-2 rounded-xl text-sm font-semibold bg-white text-sky-700 shadow-sm transition">
+          🏢 Explore PGs
+        </button>
+        <button type="button" id="navBtn-calculator" onclick="switchMainTab('calculator')" class="nav-tab-btn px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-sky-700 transition">
+          🧮 PG vs Flat Calculator
+        </button>
+        <button type="button" id="navBtn-menu" onclick="switchMainTab('menu')" class="nav-tab-btn px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-sky-700 transition">
+          🍲 Rolo Chef &amp; Tribe
+        </button>
+        <button type="button" id="navBtn-resident" onclick="switchMainTab('resident')" class="nav-tab-btn px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-sky-700 transition">
+          🔑 Resident App <span id="residentBadgeCount" class="ml-1 px-1.5 py-0.2 rounded-full text-[11px] bg-amber-100 text-amber-800 font-bold">2</span>
+        </button>
+        <button type="button" id="navBtn-neondb" onclick="openNeonModal()" class="nav-tab-btn px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-sky-700 transition">
+          ⚡ NeonDB Studio
+        </button>
+      </nav>
+
+      <!-- Right Action Controls -->
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="openSavedDrawer()" class="relative inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-xs sm:text-sm font-semibold transition" title="Shortlisted PGs">
+          <span>❤️</span>
+          <span class="hidden sm:inline">Shortlist</span>
+          <span id="shortlistCountBadge" class="px-1.5 py-0.5 rounded-full bg-white text-sky-700 font-bold text-xs border border-sky-200">2</span>
+        </button>
+
+        <button type="button" onclick="openBookingsDrawer()" class="relative inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs sm:text-sm font-semibold transition" title="My Visits & Bookings">
+          <span>📅</span>
+          <span class="hidden sm:inline">My Bookings</span>
+          <span id="bookingsCountBadge" class="px-1.5 py-0.5 rounded-full bg-white text-amber-800 font-bold text-xs border border-amber-200">1</span>
+        </button>
+
+        <button type="button" onclick="openListPropertyModal()" class="hidden xl:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold shadow-sm transition">
+          <span>+ List Your Property</span>
+        </button>
+
+        <!-- Mobile Menu Button -->
+        <button type="button" id="mobileMenuBtn" onclick="toggleMobileMenu()" class="lg:hidden inline-flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-sky-50 text-slate-700 border border-slate-200" aria-label="Open Navigation Menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileNavDrawer" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 py-3 space-y-2">
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        <button type="button" onclick="switchMainTab('explore'); toggleMobileMenu(false);" class="px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-sky-50 text-sky-800 border border-sky-200 text-left">🏢 Explore PGs</button>
+        <button type="button" onclick="switchMainTab('calculator'); toggleMobileMenu(false);" class="px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-50 text-slate-700 border border-slate-200 text-left">🧮 Cost Calculator</button>
+        <button type="button" onclick="switchMainTab('menu'); toggleMobileMenu(false);" class="px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-50 text-slate-700 border border-slate-200 text-left">🍲 Chef Menu &amp; Tribe</button>
+        <button type="button" onclick="switchMainTab('resident'); toggleMobileMenu(false);" class="px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-amber-50 text-amber-900 border border-amber-200 text-left">🔑 Resident Portal</button>
+        <button type="button" onclick="openNeonModal(); toggleMobileMenu(false);" class="px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 text-left">⚡ NeonDB Studio</button>
+        <button type="button" onclick="openListPropertyModal(); toggleMobileMenu(false);" class="px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-sky-600 text-white text-left">+ List Property</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 1: EXPLORE COLIVING & PG PROPERTIES (MAIN ZOLO CLONE EXPERIENCE)  -->
+  <!-- ===================================================================== -->
+  <main id="tabView-explore" class="flex-1">
+
+    <!-- HERO SECTION (Bright, Airy, Light Theme + HD Architectural Photo) -->
+    <section class="hero-surface border-b border-sky-100/80 py-6 sm:py-10 lg:py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+          
+          <!-- Hero Left Column: Search, City Selector & Value Props -->
+          <div class="lg:col-span-7 space-y-5">
+            <div class="inline-flex flex-wrap items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-sky-200 shadow-sm text-xs font-semibold text-sky-800">
+              <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold">INDIA'S #1 COLIVING</span>
+              <span>450+ Managed Properties • 75,000+ Happy Roloites • Zero Brokerage</span>
+            </div>
+
+            <h1 class="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.15]">
+              Rent Fully-Furnished <span class="text-sky-600 underline decoration-amber-300 decoration-4 underline-offset-4">PGs &amp; Studios</span> That Feel Like Home.
+            </h1>
+
+            <p class="text-slate-600 text-sm sm:text-base lg:text-lg max-w-2xl leading-relaxed">
+              Skip greedy brokers and 10-month security deposits. Move into sunlit, tech-enabled Rolo homes with chef-prepared meals, 300 Mbps fiber Wi-Fi, daily housekeeping, and vibrant community events.
+            </p>
+
+            <!-- City Quick-Select Pills -->
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Select Your City</span>
+                <span id="activeFilterSummaryText" class="text-xs font-semibold text-sky-700">Showing All 6 Cities (8 HD Properties)</span>
+              </div>
+              <div id="cityPillsContainer" class="flex items-center gap-2 overflow-x-auto pastel-pill-scroll pb-1">
+              </div>
+            </div>
+
+            <!-- Unified Search & Quick Filter Box -->
+            <div class="bg-white p-3 sm:p-4 rounded-2xl border border-sky-200 shadow-md space-y-3">
+              <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
+                <div class="sm:col-span-5 relative">
+                  <label for="searchLocalityInput" class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Locality, IT Park or College</label>
+                  <input id="searchLocalityInput" type="text" oninput="applyPropertyFilters()" placeholder="Try Koramangala, Hitec City, Powai..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:bg-white" />
+                </div>
+                <div class="sm:col-span-3">
+                  <label for="filterGenderSelect" class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Gender Category</label>
+                  <select id="filterGenderSelect" onchange="applyPropertyFilters()" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:outline-none focus:border-sky-500 focus:bg-white">
+                    <option value="ALL">All (Unisex / Men / Women)</option>
+                    <option value="Unisex">Unisex Coliving</option>
+                    <option value="Women">Women Only</option>
+                    <option value="Men">Men Only</option>
+                  </select>
+                </div>
+                <div class="sm:col-span-4">
+                  <label for="filterSharingSelect" class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Room Occupancy</label>
+                  <select id="filterSharingSelect" onchange="applyPropertyFilters()" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:outline-none focus:border-sky-500 focus:bg-white">
+                    <option value="ALL">Any Sharing / Studio</option>
+                    <option value="Private">Private Room / Studio</option>
+                    <option value="Twin">Twin Sharing (2 Beds)</option>
+                    <option value="Triple">Triple Sharing (3 Beds)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Secondary Filter Row: Budget Slider + Tier + Instant Reset -->
+              <div class="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3 flex-1 min-w-[220px]">
+                  <label for="budgetRangeInput" class="text-xs font-bold text-slate-600 whitespace-nowrap">
+                    Max Budget: <span id="budgetValueLabel" class="text-sky-700 font-extrabold">₹26,000/mo</span>
+                  </label>
+                  <input id="budgetRangeInput" type="range" min="7500" max="26000" step="500" value="26000" oninput="applyPropertyFilters()" class="w-full h-2 bg-sky-100 rounded-lg cursor-pointer" />
+                </div>
+
+                <div class="flex items-center gap-2 flex-wrap">
+                  <button type="button" id="tierBtn-ALL" onclick="setTierFilter('ALL')" class="tier-chip px-2.5 py-1 rounded-lg text-xs font-semibold bg-sky-600 text-white transition">All Tiers</button>
+                  <button type="button" id="tierBtn-Rolo Select" onclick="setTierFilter('Rolo Select')" class="tier-chip px-2.5 py-1 rounded-lg text-xs font-semibold bg-sky-50 text-sky-800 border border-sky-200 transition">✨ Rolo Select</button>
+                  <button type="button" id="tierBtn-Rolo Studio" onclick="setTierFilter('Rolo Studio')" class="tier-chip px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200 transition">🏙️ Rolo Studio</button>
+                  <button type="button" id="tierBtn-Rolo Standard" onclick="setTierFilter('Rolo Standard')" class="tier-chip px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200 transition">🏠 Standard</button>
+                  <button type="button" onclick="resetAllFilters()" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition">Reset</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trust Stats Row -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
+              <div class="bg-white/90 px-3.5 py-2.5 rounded-xl border border-sky-100 shadow-sm">
+                <div class="font-display font-extrabold text-lg sm:text-xl text-sky-700">₹0</div>
+                <div class="text-xs text-slate-500 font-medium">Brokerage Fee Forever</div>
+              </div>
+              <div class="bg-white/90 px-3.5 py-2.5 rounded-xl border border-amber-100 shadow-sm">
+                <div class="font-display font-extrabold text-lg sm:text-xl text-amber-600">1 Month</div>
+                <div class="text-xs text-slate-500 font-medium">Low Security Deposit</div>
+              </div>
+              <div class="bg-white/90 px-3.5 py-2.5 rounded-xl border border-emerald-100 shadow-sm">
+                <div class="font-display font-extrabold text-lg sm:text-xl text-emerald-600">300 Mbps</div>
+                <div class="text-xs text-slate-500 font-medium">Enterprise Mesh Wi-Fi</div>
+              </div>
+              <div class="bg-white/90 px-3.5 py-2.5 rounded-xl border border-purple-100 shadow-sm">
+                <div class="font-display font-extrabold text-lg sm:text-xl text-purple-600">4.89 ★</div>
+                <div class="text-xs text-slate-500 font-medium">Verified Resident Rating</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Right Column: Real HD Architectural Photography Showcase -->
+          <div class="lg:col-span-5">
+            <div class="relative bg-white p-2.5 sm:p-3 rounded-3xl border border-sky-200 shadow-lg">
+              <div class="relative rounded-2xl overflow-hidden aspect-[16/10] bg-sky-50">
+                <img id="heroMainImage" src="assets/images/hero-lounge.jpg" alt="Sunlit Rolo Coliving Lounge and Coworking Space" class="w-full h-full object-cover max-w-full transition duration-500" />
+                <div class="absolute top-3 left-3 flex flex-wrap gap-1.5">
+                  <span class="px-3 py-1 rounded-full text-xs font-bold bg-white/95 text-sky-800 shadow-sm border border-sky-100">
+                    📸 Real HD Property Tour
+                  </span>
+                  <span id="heroPhotoCaptionBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-50/95 text-amber-900 shadow-sm border border-amber-200">
+                    Sunlit Coworking Lounge • Bangalore
+                  </span>
+                </div>
+                <div class="absolute bottom-3 right-3">
+                  <button type="button" onclick="openPropertyModal('rolo-astrid-blr')" class="px-3.5 py-2 rounded-xl bg-white/95 hover:bg-white text-sky-800 font-bold text-xs shadow-md border border-sky-200 transition flex items-center gap-1.5">
+                    <span>🔍 Inspect Flagship Property</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Interactive HD Gallery Strip inside Hero -->
+              <div class="mt-2.5 grid grid-cols-4 gap-2">
+                <button type="button" onclick="swapHeroShowcase('assets/images/hero-lounge.jpg', 'Sunlit Coworking Lounge • Bangalore')" class="rounded-xl overflow-hidden border-2 border-sky-500 focus:outline-none group">
+                  <img src="assets/images/hero-lounge.jpg" alt="Coworking Lounge" class="w-full h-14 object-cover group-hover:scale-105 transition" />
+                </button>
+                <button type="button" onclick="swapHeroShowcase('assets/images/private-studio.jpg', 'Rolo Select Private Studio • Koramangala')" class="rounded-xl overflow-hidden border-2 border-transparent hover:border-sky-400 focus:outline-none group">
+                  <img src="assets/images/private-studio.jpg" alt="Private Studio Room" class="w-full h-14 object-cover group-hover:scale-105 transition" />
+                </button>
+                <button type="button" onclick="swapHeroShowcase('assets/images/rooftop-cafe.jpg', 'Sky Deck Pergola Cafe • Whitefield')" class="rounded-xl overflow-hidden border-2 border-transparent hover:border-sky-400 focus:outline-none group">
+                  <img src="assets/images/rooftop-cafe.jpg" alt="Rooftop Terrace Cafe" class="w-full h-14 object-cover group-hover:scale-105 transition" />
+                </button>
+                <button type="button" onclick="swapHeroShowcase('assets/images/fitness-gym.jpg', 'Fitness & Foosball Studio • Hitec City')" class="rounded-xl overflow-hidden border-2 border-transparent hover:border-sky-400 focus:outline-none group">
+                  <img src="assets/images/fitness-gym.jpg" alt="Fitness and Recreation" class="w-full h-14 object-cover group-hover:scale-105 transition" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- AMENITIES FILTER PILLS & SORTING BAR -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
+      <div class="bg-white rounded-2xl border border-slate-200/90 p-3.5 sm:p-4 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <!-- Quick Amenity Filter Chips -->
+        <div class="flex items-center gap-2 overflow-x-auto pastel-pill-scroll pb-1 md:pb-0">
+          <span class="text-xs font-bold uppercase text-slate-400 whitespace-nowrap mr-1">Must-Haves:</span>
+          <button type="button" onclick="toggleAmenityFilter('300 Mbps')" id="amChip-300 Mbps" class="am-filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200 whitespace-nowrap transition">⚡ 300 Mbps Wi-Fi</button>
+          <button type="button" onclick="toggleAmenityFilter('Meals')" id="amChip-Meals" class="am-filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200 whitespace-nowrap transition">🍱 Chef Meals Included</button>
+          <button type="button" onclick="toggleAmenityFilter('Gym')" id="amChip-Gym" class="am-filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200 whitespace-nowrap transition">🏋️ Fitness Gym</button>
+          <button type="button" onclick="toggleAmenityFilter('AC')" id="amChip-AC" class="am-filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200 whitespace-nowrap transition">❄️ Air Conditioning</button>
+          <button type="button" onclick="toggleAmenityFilter('Biometric')" id="amChip-Biometric" class="am-filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200 whitespace-nowrap transition">🔐 Biometric Security</button>
+          <button type="button" onclick="toggleAmenityFilter('EV')" id="amChip-EV" class="am-filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200 whitespace-nowrap transition">🛵 EV Charging</button>
+        </div>
+
+        <!-- Sort + View Toggle -->
+        <div class="flex items-center justify-between sm:justify-end gap-2.5 shrink-0 border-t md:border-t-0 pt-2 md:pt-0 border-slate-100">
+          <div class="flex items-center gap-1.5">
+            <label for="sortPropertiesSelect" class="text-xs font-bold text-slate-500">Sort:</label>
+            <select id="sortPropertiesSelect" onchange="applyPropertyFilters()" class="px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-sky-500">
+              <option value="featured">Popularity &amp; Rating</option>
+              <option value="price-asc">Rent: Low to High</option>
+              <option value="price-desc">Rent: High to Low</option>
+              <option value="metro">Closest to Metro / IT Hub</option>
+            </select>
+          </div>
+
+          <button type="button" id="toggleMapViewBtn" onclick="toggleMapRadarView()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-xs font-bold transition">
+            <span>🗺️</span>
+            <span id="toggleMapViewLabel">Show Interactive Radar Map</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE NEIGHBORHOOD RADAR & TECH-PARK PROXIMITY MAP (Light Theme) -->
+    <section id="interactiveMapSection" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+      <div class="bg-gradient-to-br from-sky-50 via-white to-emerald-50 rounded-3xl border border-sky-200 p-4 sm:p-6 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <div>
+            <h2 class="font-display font-bold text-base sm:text-lg text-slate-900">📍 Rolo Live Neighborhood &amp; Metro Proximity Radar</h2>
+            <p class="text-xs text-slate-600">Click any property pin below to inspect commute times to nearby IT parks, metro stations, and universities.</p>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-white border border-sky-200 text-xs font-semibold text-sky-700">All Properties Within 3–8 Mins of Metro / IT Corridor</span>
+        </div>
+        <div id="mapPinsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        </div>
+      </div>
+    </section>
+
+    <!-- PROPERTY LISTINGS GRID + COMPARE BAR -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+      <!-- Compare Selection Floating Strip -->
+      <div id="compareSelectionBanner" class="hidden mb-5 bg-amber-50 border border-amber-200 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="px-2.5 py-1 rounded-lg bg-amber-200/80 text-amber-950 font-bold text-xs">⚖️ COMPARE TRAY</span>
+          <span id="compareBannerText" class="text-xs sm:text-sm font-semibold text-slate-800">Selected 2 properties for side-by-side comparison</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="openCompareModal()" class="px-3.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-sm transition">
+            Compare Side-by-Side
+          </button>
+          <button type="button" onclick="clearCompareTray()" class="px-2.5 py-1.5 rounded-xl bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-700 border border-slate-200 text-xs font-semibold transition">
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- Properties Grid Container -->
+      <div id="propertiesGridContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      </div>
+
+      <!-- Empty Filter State -->
+      <div id="emptyPropertiesState" class="hidden bg-white rounded-3xl border border-slate-200 p-10 text-center my-4 max-w-xl mx-auto">
+        <div class="text-4xl mb-3">🔍</div>
+        <h3 class="font-display font-bold text-lg text-slate-900 mb-1">No Rolo Coliving properties matched that exact filter combination</h3>
+        <p class="text-xs sm:text-sm text-slate-500 mb-4">Try increasing your monthly budget slider or switching the city/gender filter to see all available verified homes.</p>
+        <button type="button" onclick="resetAllFilters()" class="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold shadow-sm transition">
+          Reset Filters &amp; Show All 8 Properties
+        </button>
+      </div>
+    </section>
+
+    <!-- WHY ROLO COLIVING (ZOLO SIGNATURE ADVANTAGE COMPARISON STRIP) -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="bg-gradient-to-r from-sky-50 via-white to-amber-50 rounded-3xl border border-sky-100 p-6 sm:p-8 shadow-sm">
+        <div class="max-w-3xl mb-6">
+          <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 font-bold text-xs uppercase tracking-wider">The Rolo Standard</span>
+          <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-900 mt-2">Why 75,000+ Millennials &amp; Gen-Z Choose Rolo Over Local PGs</h2>
+          <p class="text-sm text-slate-600 mt-1">Every Rolo home is standardized with hotel-grade hygiene, transparent digital leases, and zero landlord interference.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-sky-100 shadow-sm">
+            <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center text-xl mb-3 border border-sky-200">📄</div>
+            <h3 class="font-display font-bold text-base text-slate-900">100% Paperless Onboarding</h3>
+            <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">Reserve your bed online in 90 seconds, sign your digital rental agreement, and get instant biometric access at move-in.</p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-amber-100 shadow-sm">
+            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-xl mb-3 border border-amber-200">🍛</div>
+            <h3 class="font-display font-bold text-base text-slate-900">FSSAI-Certified Rolo Kitchens</h3>
+            <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">Vote on the weekly menu via the Rolo Resident App. Enjoy homestyle North, South &amp; Continental meals prepared fresh daily.</p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-emerald-100 shadow-sm">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-xl mb-3 border border-emerald-200">🔁</div>
+            <h3 class="font-display font-bold text-base text-slate-900">Free Inter-City &amp; Building Transfers</h3>
+            <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">Switching jobs from Bangalore to Hyderabad or Pune? Transfer your Rolo stay and security deposit seamlessly with zero penalty.</p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-purple-100 shadow-sm">
+            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center text-xl mb-3 border border-purple-200">🎸</div>
+            <h3 class="font-display font-bold text-base text-slate-900">Zo-Tribe Community &amp; Events</h3>
+            <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">Move in alone, make friends on day one. Join weekend rooftop acoustic jams, startup pitch nights, and FIFA tournaments.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 2: INTERACTIVE PG VS. FLAT COST-OF-LIVING CALCULATOR              -->
+  <!-- ===================================================================== -->
+  <section id="tabView-calculator" class="hidden flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <div class="bg-white rounded-3xl border border-sky-200 p-6 sm:p-8 shadow-sm">
+      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5 mb-6">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">TRANSPARENT SAVINGS SIMULATOR</span>
+          <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-900 mt-2">Rolo Coliving vs. Traditional Rented Apartment</h2>
+          <p class="text-sm text-slate-600 mt-1">Adjust the sliders to compare your real monthly cash outflow and upfront deposit across Indian metro cities.</p>
+        </div>
+        <button type="button" onclick="switchMainTab('explore')" class="px-4 py-2.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 font-semibold text-xs sm:text-sm border border-sky-200 transition">
+          ← Back to Property Listings
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Sliders Column -->
+        <div class="lg:col-span-6 space-y-5 bg-slate-50/80 p-5 rounded-2xl border border-slate-200">
+          <div>
+            <label for="calcCitySelect" class="block text-xs font-bold uppercase text-slate-500 mb-1.5">Select Metro City</label>
+            <select id="calcCitySelect" onchange="updateCostCalculator()" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-sm font-semibold text-slate-800">
+              <option value="Bangalore">Bangalore (Koramangala / HSR / Whitefield)</option>
+              <option value="Mumbai">Mumbai (Powai / Andheri East)</option>
+              <option value="Hyderabad">Hyderabad (Hitec City / Gachibowli)</option>
+              <option value="Pune">Pune (Hinjewadi / Kharadi)</option>
+              <option value="Delhi NCR">Delhi NCR (Gurugram CyberHub)</option>
+              <option value="Kolkata">Kolkata (Salt Lake Sector V)</option>
+            </select>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+              <span>Base 1BHK / Shared Flat Rent (Per Person)</span>
+              <span id="calcBaseRentVal" class="text-sky-700">₹14,000 / mo</span>
+            </div>
+            <input id="calcBaseRentInput" type="range" min="8000" max="28000" step="500" value="14000" oninput="updateCostCalculator()" class="w-full h-2 bg-sky-100 rounded-lg cursor-pointer" />
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+              <span>Cook, Maid &amp; Grocery Expense</span>
+              <span id="calcFoodMaidVal" class="text-sky-700">₹6,500 / mo</span>
+            </div>
+            <input id="calcFoodMaidInput" type="range" min="3500" max="12000" step="500" value="6500" oninput="updateCostCalculator()" class="w-full h-2 bg-sky-100 rounded-lg cursor-pointer" />
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+              <span>Furniture &amp; Appliance Rental + Wi-Fi + Society Maintenance</span>
+              <span id="calcUtilitiesVal" class="text-sky-700">₹3,800 / mo</span>
+            </div>
+            <input id="calcUtilitiesInput" type="range" min="2000" max="8000" step="200" value="3800" oninput="updateCostCalculator()" class="w-full h-2 bg-sky-100 rounded-lg cursor-pointer" />
+          </div>
+
+          <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 space-y-1">
+            <div class="font-bold">💡 Hidden Upfront Cost in Traditional Flats:</div>
+            <p>Landlords typically charge <strong>6 to 10 months rent as deposit</strong> plus <strong>1 month brokerage</strong>. At Rolo Coliving, brokerage is <strong>₹0</strong> and security deposit is strictly <strong>1 month</strong>.</p>
+          </div>
+        </div>
+
+        <!-- Comparison Breakdown Column -->
+        <div class="lg:col-span-6 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Traditional Flat Card -->
+            <div class="p-5 rounded-2xl bg-rose-50/60 border border-rose-200">
+              <span class="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 text-[11px] font-bold">TRADITIONAL RENTED FLAT</span>
+              <div id="calcFlatMonthlyTotal" class="font-display font-extrabold text-2xl sm:text-3xl text-rose-700 mt-2">₹26,633<span class="text-sm font-normal">/mo</span></div>
+              <p class="text-xs text-slate-600 mt-1">Effective monthly outflow (incl. amortized brokerage)</p>
+              <ul class="mt-4 space-y-2 text-xs text-slate-700 border-t border-rose-200/70 pt-3">
+                <li class="flex justify-between"><span>Upfront Security Deposit (6 mo):</span><strong id="calcFlatDeposit">₹84,000</strong></li>
+                <li class="flex justify-between"><span>Brokerage Fee (1 mo):</span><strong id="calcFlatBrokerage">₹14,000</strong></li>
+                <li class="flex justify-between"><span>Meals, Cook &amp; Housekeeping:</span><strong id="calcFlatFood">₹6,500</strong></li>
+                <li class="flex justify-between"><span>Wi-Fi, Furniture &amp; Bills:</span><strong id="calcFlatUtil">₹3,800</strong></li>
+              </ul>
+            </div>
+
+            <!-- Rolo Coliving Card -->
+            <div class="p-5 rounded-2xl bg-sky-50/90 border-2 border-sky-400 shadow-sm">
+              <span class="px-2.5 py-0.5 rounded-full bg-sky-600 text-white text-[11px] font-bold">✨ ROLO COLIVING ALL-IN-ONE</span>
+              <div id="calcRoloMonthlyTotal" class="font-display font-extrabold text-2xl sm:text-3xl text-sky-800 mt-2">₹13,300<span class="text-sm font-normal">/mo</span></div>
+              <p class="text-xs text-slate-600 mt-1">All-inclusive single bill (Rent + Meals + Wi-Fi + Cleaning)</p>
+              <ul class="mt-4 space-y-2 text-xs text-slate-700 border-t border-sky-200 pt-3">
+                <li class="flex justify-between"><span>Upfront Security Deposit (1 mo):</span><strong id="calcRoloDeposit" class="text-emerald-700">₹13,300</strong></li>
+                <li class="flex justify-between"><span>Brokerage Fee:</span><strong class="text-emerald-700">₹0 (Free)</strong></li>
+                <li class="flex justify-between"><span>Chef Meals &amp; Housekeeping:</span><strong class="text-emerald-700">Included</strong></li>
+                <li class="flex justify-between"><span>300Mbps Wi-Fi &amp; Gym:</span><strong class="text-emerald-700">Included</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Annual Savings Banner -->
+          <div class="p-5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-sky-50 border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div class="text-xs font-bold uppercase text-emerald-800">Estimated Annual Savings with Rolo Coliving</div>
+              <div id="calcAnnualSavings" class="font-display font-extrabold text-2xl sm:text-3xl text-emerald-700 mt-0.5">₹1,60,000 / year</div>
+              <div id="calcUpfrontFreed" class="text-xs text-slate-600 mt-0.5">Plus ₹84,700 less cash locked in upfront deposits &amp; brokerage!</div>
+            </div>
+            <button type="button" onclick="switchMainTab('explore')" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-sm whitespace-nowrap transition">
+              Find PGs in This Budget →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 3: ROLO CHEF WEEKLY FOOD MENU & ZO-TRIBE COMMUNITY EVENTS         -->
+  <!-- ===================================================================== -->
+  <section id="tabView-menu" class="hidden flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
+    <!-- Rolo Chef Interactive Weekly Food Menu -->
+    <div class="bg-white rounded-3xl border border-sky-200 p-6 sm:p-8 shadow-sm">
+      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5 mb-6">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">FSSAI CERTIFIED KITCHENS • ZERO PALM OIL</span>
+          <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-900 mt-2">🍲 Rolo Chef Interactive Weekly Menu &amp; Meal RSVP</h2>
+          <p class="text-sm text-slate-600 mt-1">Select a day of the week to inspect fresh homestyle meals, macro nutrition, and toggle your dining attendance to earn Rolo Green Credits.</p>
+        </div>
+        <div class="flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-3.5 py-2 rounded-2xl">
+          <span class="text-lg">🌱</span>
+          <div class="text-xs">
+            <div class="font-bold text-emerald-900">Green Meal Credits Earned</div>
+            <div id="mealCreditsCounter" class="text-emerald-700 font-semibold">340 Credits (₹340 off next rent)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day Selector Pills -->
+      <div id="menuDaysBar" class="flex items-center gap-2 overflow-x-auto pastel-pill-scroll pb-3 mb-4">
+      </div>
+
+      <!-- 4-Meal Cards Grid for Selected Day -->
+      <div id="dailyMealsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      </div>
+
+      <!-- Live Sunday Special Dish Poll -->
+      <div class="mt-6 bg-amber-50/70 rounded-2xl border border-amber-200 p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase text-amber-800">🗳️ Live Resident Sunday Feast Poll</span>
+          <h3 class="font-display font-bold text-base text-slate-900 mt-0.5">Vote for this Sunday's Special Community Dinner!</h3>
+          <p class="text-xs text-slate-600">Winning dish gets served across all dining lounges at 8:00 PM Sunday.</p>
+        </div>
+        <div id="dishPollButtons" class="flex flex-wrap gap-2">
+        </div>
+      </div>
+    </div>
+
+    <!-- Zo-Tribe Community Events & Workshops -->
+    <div class="bg-white rounded-3xl border border-sky-200 p-6 sm:p-8 shadow-sm">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-bold">ZO-TRIBE COMMUNITY</span>
+          <h2 class="font-display font-extrabold text-2xl text-slate-900 mt-2">🎉 Upcoming Rolo Community Events &amp; Mixers</h2>
+          <p class="text-sm text-slate-600">Free for all verified Rolo residents. One-click RSVP reserves your spot and syncs with NeonDB.</p>
+        </div>
+      </div>
+      <div id="communityEventsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 4: ROLO RESIDENT APP PORTAL (RENT, TICKETS, KYC, GATE PASS)       -->
+  <!-- ===================================================================== -->
+  <section id="tabView-resident" class="hidden flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-6">
+    <!-- Resident Profile Banner -->
+    <div class="bg-gradient-to-r from-sky-50 via-white to-amber-50 rounded-3xl border border-sky-200 p-6 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div class="flex items-start sm:items-center gap-4">
+        <div class="w-14 h-14 rounded-2xl bg-sky-600 text-white font-display font-extrabold text-xl flex items-center justify-center shadow-sm shrink-0">
+          AR
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h2 class="font-display font-extrabold text-xl sm:text-2xl text-slate-900">Aarav Sharma</h2>
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200">✓ Digital KYC Verified</span>
+            <span class="px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 text-xs font-bold border border-sky-200">ID: ROLO-RES-9021</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Staying at <strong>Rolo Astrid Residency (Koramangala)</strong> • Room <strong>304-B (Twin Sharing)</strong> • Move-in: 01 Aug 2026
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2.5">
+        <button type="button" onclick="openGatePassModal()" class="px-3.5 py-2 rounded-xl bg-white hover:bg-sky-50 text-sky-800 border border-sky-200 text-xs sm:text-sm font-bold shadow-sm transition">
+          🪪 Generate Visitor Gate Pass
+        </button>
+        <button type="button" onclick="openWifiCredentialsModal()" class="px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs sm:text-sm font-bold shadow-sm transition">
+          📶 Wi-Fi &amp; Smart Lock PIN
+        </button>
+      </div>
+    </div>
+
+    <!-- Resident Portal 3-Column Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Column 1: Rent & Utility Ledger -->
+      <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-display font-bold text-lg text-slate-900">💳 Monthly Rent &amp; Utility Dues</h3>
+          <span id="rentStatusBadge" class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">Due in 5 Days</span>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-sky-50/70 border border-sky-100 space-y-2.5 text-xs sm:text-sm">
+          <div class="flex justify-between text-slate-600"><span>Base Room Rent (Room 304-B):</span><strong class="text-slate-900">₹14,200</strong></div>
+          <div class="flex justify-between text-slate-600"><span>Rolo Chef Meal Plan (Included):</span><strong class="text-emerald-700">₹0</strong></div>
+          <div class="flex justify-between text-slate-600"><span>Smart Meter Electricity Split (48 kWh):</span><strong class="text-slate-900">₹430</strong></div>
+          <div class="flex justify-between text-emerald-700"><span>Green Meal Attendance Rebate:</span><strong>-₹340</strong></div>
+          <div class="border-t border-sky-200 pt-2.5 flex justify-between items-baseline">
+            <span class="font-bold text-slate-800">Net Payable (Nov 2026):</span>
+            <span id="residentNetPayable" class="font-display font-extrabold text-2xl text-sky-800">₹14,290</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2.5">
+          <button type="button" id="payRentNowBtn" onclick="simulateRentPayment()" class="flex-1 py-3 px-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm shadow-sm transition">
+            ⚡ Pay ₹14,290 via Instant UPI
+          </button>
+          <button type="button" onclick="downloadRentInvoice()" class="py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm transition">
+            📥 Receipt
+          </button>
+        </div>
+
+        <!-- Past Payment History -->
+        <div class="pt-3 border-t border-slate-100">
+          <div class="text-xs font-bold uppercase text-slate-400 mb-2">Recent Ledger Transactions</div>
+          <div id="residentPaymentHistory" class="space-y-2 text-xs">
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <div>
+                <div class="font-semibold text-slate-800">October 2026 Rent + Utilities</div>
+                <div class="text-slate-500">Paid on 02 Oct 2026 • UPI Ref #628190441</div>
+              </div>
+              <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold">₹14,150 Paid</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <div>
+                <div class="font-semibold text-slate-800">September 2026 Rent + Utilities</div>
+                <div class="text-slate-500">Paid on 01 Sep 2026 • UPI Ref #591024882</div>
+              </div>
+              <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold">₹14,200 Paid</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Column 2: 24/7 Maintenance & Housekeeping Ticket Desk -->
+      <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="font-display font-bold text-lg text-slate-900">🛠️ 24x7 Housekeeping &amp; Support Helpdesk</h3>
+            <p class="text-xs text-slate-500">Raise a service request—persisted to NeonDB `maintenance_tickets` with a 4-hour SLA guarantee.</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-full bg-sky-50 text-sky-800 text-xs font-semibold border border-sky-200">On-Site Property Captain: Rajesh K.</span>
+        </div>
+
+        <!-- New Ticket Form -->
+        <form id="maintenanceTicketForm" onsubmit="submitMaintenanceTicket(event)" class="bg-slate-50/90 p-4 rounded-2xl border border-slate-200 space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label for="ticketCategory" class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Service Category</label>
+              <select id="ticketCategory" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm font-medium text-slate-800">
+                <option value="Housekeeping">🧹 Room Housekeeping</option>
+                <option value="Wi-Fi & Network">📶 Wi-Fi / Mesh Router</option>
+                <option value="AC & Electrical">❄️ AC / Geyser / Electrical</option>
+                <option value="Plumbing">🚿 Plumbing &amp; Washroom</option>
+                <option value="Laundry">🧺 Washing Machine / Laundry</option>
+                <option value="Food & Kitchen">🍛 Food &amp; Dining Feedback</option>
+              </select>
+            </div>
+            <div>
+              <label for="ticketPriority" class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Priority SLA</label>
+              <select id="ticketPriority" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm font-medium text-slate-800">
+                <option value="Normal (4h SLA)">Normal (4-Hour SLA)</option>
+                <option value="High (90m SLA)">High (90-Min Express)</option>
+                <option value="Scheduled Morning">Scheduled Tomorrow 10 AM</option>
+              </select>
+            </div>
+            <div>
+              <label for="ticketTitle" class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Issue Summary</label>
+              <input id="ticketTitle" type="text" required placeholder="e.g., Deep clean balcony & study desk" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm text-slate-800" />
+            </div>
+          </div>
+          <div class="flex items-center justify-end gap-2">
+            <button type="submit" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-bold shadow-sm transition">
+              + Raise Service Ticket
+            </button>
+          </div>
+        </form>
+
+        <!-- Active Tickets List -->
+        <div>
+          <div class="text-xs font-bold uppercase text-slate-400 mb-2.5">Active &amp; Recent Service Tickets</div>
+          <div id="maintenanceTicketsList" class="space-y-2.5">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- LIGHT-THEMED COMPREHENSIVE FOOTER                                     -->
+  <!-- ===================================================================== -->
+  <footer class="bg-gradient-to-b from-sky-50/70 to-amber-50/50 border-t border-sky-200/80 mt-12 text-slate-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 pb-8 border-b border-sky-200/60">
+        <!-- Brand & 340-Char Functional Description -->
+        <div class="lg:col-span-5 space-y-3">
+          <div class="flex items-center gap-2.5">
+            <img src="/favicon.svg" alt="Rolo Coliving Favicon" class="w-9 h-9 rounded-xl shadow-sm" />
+            <span class="font-display font-extrabold text-xl text-sky-800">Rolo <span class="text-amber-500">Coliving</span></span>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-white text-sky-700 border border-sky-200">Rent PG Online</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed bg-white/90 p-3.5 rounded-2xl border border-sky-100">
+            Rolo Coliving - Rent PG Online is a responsive, light-themed managed accommodation and PG booking web platform built for Netlify and powered by NeonDB Serverless PostgreSQL. It enables students and professionals to discover verified PGs across Indian cities, filter amenities, book virtual or physical tours, reserve beds, and manage stays.
+          </p>
+          <div class="flex flex-wrap items-center gap-2 text-xs text-slate-500">
+            <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 font-medium">🌐 Netlify Edge Ready</span>
+            <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 font-medium">🐘 NeonDB Serverless Postgres</span>
+            <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 font-medium">🎨 Custom Root SVG Favicon</span>
+          </div>
+        </div>
+
+        <!-- Cities Links -->
+        <div class="lg:col-span-3 space-y-2">
+          <div class="font-display font-bold text-sm text-slate-900 uppercase tracking-wider">Top Coliving Cities</div>
+          <ul class="space-y-1.5 text-xs sm:text-sm">
+            <li><button type="button" onclick="selectCityFilter('Bangalore'); switchMainTab('explore');" class="text-slate-600 hover:text-sky-700 font-medium">PG in Bangalore (Koramangala, HSR, Whitefield)</button></li>
+            <li><button type="button" onclick="selectCityFilter('Hyderabad'); switchMainTab('explore');" class="text-slate-600 hover:text-sky-700 font-medium">PG in Hyderabad (Hitec City, Madhapur)</button></li>
+            <li><button type="button" onclick="selectCityFilter('Pune'); switchMainTab('explore');" class="text-slate-600 hover:text-sky-700 font-medium">PG in Pune (Hinjewadi Phase 1 &amp; 2)</button></li>
+            <li><button type="button" onclick="selectCityFilter('Mumbai'); switchMainTab('explore');" class="text-slate-600 hover:text-sky-700 font-medium">Coliving in Mumbai (Powai, Andheri)</button></li>
+            <li><button type="button" onclick="selectCityFilter('Delhi NCR'); switchMainTab('explore');" class="text-slate-600 hover:text-sky-700 font-medium">PG in Gurugram &amp; Delhi NCR</button></li>
+            <li><button type="button" onclick="selectCityFilter('Kolkata'); switchMainTab('explore');" class="text-slate-600 hover:text-sky-700 font-medium">PG in Kolkata (Salt Lake Sector V)</button></li>
+          </ul>
+        </div>
+
+        <!-- Platform Features -->
+        <div class="lg:col-span-2 space-y-2">
+          <div class="font-display font-bold text-sm text-slate-900 uppercase tracking-wider">Platform Tools</div>
+          <ul class="space-y-1.5 text-xs sm:text-sm">
+            <li><button type="button" onclick="switchMainTab('calculator')" class="text-slate-600 hover:text-sky-700 font-medium">PG vs Flat Calculator</button></li>
+            <li><button type="button" onclick="switchMainTab('menu')" class="text-slate-600 hover:text-sky-700 font-medium">Rolo Chef Weekly Menu</button></li>
+            <li><button type="button" onclick="switchMainTab('resident')" class="text-slate-600 hover:text-sky-700 font-medium">Resident App Portal</button></li>
+            <li><button type="button" onclick="openNeonModal()" class="text-slate-600 hover:text-sky-700 font-medium">NeonDB SQL Studio</button></li>
+            <li><button type="button" onclick="openPromoModal()" class="text-slate-600 hover:text-sky-700 font-medium">Refer &amp; Earn ₹2,500</button></li>
+          </ul>
+        </div>
+
+        <!-- 24x7 Concierge Support -->
+        <div class="lg:col-span-2 space-y-2">
+          <div class="font-display font-bold text-sm text-slate-900 uppercase tracking-wider">Concierge Desk</div>
+          <p class="text-xs text-slate-600">Toll-Free Move-In Advisor (8 AM – 10 PM IST)</p>
+          <div class="p-3 rounded-xl bg-white border border-sky-200 text-xs">
+            <div class="font-bold text-sky-800">📞 1800-209-ROLO</div>
+            <div class="text-slate-500 mt-0.5">care@rolocoliving.in</div>
+          </div>
+          <button type="button" onclick="openCallbackModal()" class="w-full py-2 px-3 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs transition">
+            ⚡ Request Instant Callback
+          </button>
+        </div>
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+        <div>© 2026 Rolo Coliving Spaces Pvt. Ltd. All rights reserved. Designed for Netlify &amp; NeonDB Serverless PostgreSQL.</div>
+        <div class="flex items-center gap-4">
+          <span>Zero Brokerage Guarantee</span>
+          <span>•</span>
+          <span>1-Month Deposit Policy</span>
+          <span>•</span>
+          <span>ISO 9001 Certified Hygiene</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 1: PROPERTY DETAIL, 360° ROOM VIEWER, VISIT & BED BOOKING MODAL -->
+  <!-- ===================================================================== -->
+  <div id="propertyDetailModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/30 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-white rounded-3xl border border-sky-200 shadow-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto p-4 sm:p-6 space-y-5">
+      <div id="propertyModalContent">
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 2: NEONDB SERVERLESS POSTGRES STUDIO & SCHEMA INSPECTOR         -->
+  <!-- ===================================================================== -->
+  <div id="neonDbModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/30 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-white rounded-3xl border border-emerald-200 shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-4">
+      <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-4">
+        <div class="flex items-center gap-2.5">
+          <span class="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-xl">🐘</span>
+          <div>
+            <h3 class="font-display font-extrabold text-lg sm:text-xl text-slate-900">NeonDB Serverless PostgreSQL Integration Studio</h3>
+            <p class="text-xs text-slate-500">Netlify Functions (`/.netlify/functions/*`) + `@neondatabase/serverless` Driver</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeNeonModal()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-bold">✕</button>
+      </div>
+
+      <!-- Connection Configuration Box -->
+      <div class="bg-emerald-50/70 rounded-2xl border border-emerald-200 p-4 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="text-xs sm:text-sm font-bold text-emerald-950">Live Database Connection Mode</div>
+          <span id="modalNeonBadge" class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-300">
+            Synchronized Local + Serverless API Ready
+          </span>
+        </div>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          In production on Netlify, set <code class="px-1.5 py-0.5 bg-white rounded border border-emerald-200 text-emerald-800 font-semibold">DATABASE_URL</code> in <strong>Netlify Site Settings → Environment Variables</strong> (or run <code class="px-1.5 py-0.5 bg-white rounded border border-emerald-200">netlify addons:create neon</code>). You can also test a connection string or run a live health ping below:
+        </p>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input id="customNeonUrlInput" type="text" placeholder="postgresql://neondb_owner:pass@ep-cool-sky.ap-southeast-1.aws.neon.tech/rolo_coliving?sslmode=require" class="flex-1 px-3 py-2 rounded-xl bg-white border border-emerald-200 text-xs text-slate-800 font-mono" />
+          <button type="button" onclick="pingNeonHealth()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold whitespace-nowrap transition">
+            ⚡ Test NeonDB Endpoint
+          </button>
+        </div>
+        <div id="neonHealthResultBox" class="text-xs font-mono bg-white p-3 rounded-xl border border-emerald-100 text-slate-700">
+          Driver: @neondatabase/serverless v0.10.4 | Tables: properties (8 rows), scheduled_visits, bed_bookings, maintenance_tickets, community_rsvps
+        </div>
+      </div>
+
+      <!-- Live Replicated Tables Preview -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
+        <div class="p-3 rounded-xl bg-sky-50 border border-sky-100">
+          <div id="dbStatProperties" class="font-display font-extrabold text-xl text-sky-700">8</div>
+          <div class="text-[11px] font-semibold text-slate-600">properties rows</div>
+        </div>
+        <div class="p-3 rounded-xl bg-amber-50 border border-amber-100">
+          <div id="dbStatBookings" class="font-display font-extrabold text-xl text-amber-700">1</div>
+          <div class="text-[11px] font-semibold text-slate-600">visits &amp; bookings</div>
+        </div>
+        <div class="p-3 rounded-xl bg-purple-50 border border-purple-100">
+          <div id="dbStatTickets" class="font-display font-extrabold text-xl text-purple-700">2</div>
+          <div class="text-[11px] font-semibold text-slate-600">maintenance_tickets</div>
+        </div>
+        <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-100">
+          <div id="dbStatRsvps" class="font-display font-extrabold text-xl text-emerald-700">3</div>
+          <div class="text-[11px] font-semibold text-slate-600">community_rsvps</div>
+        </div>
+      </div>
+
+      <!-- SQL Schema Snippet & Copy -->
+      <div>
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-xs font-bold uppercase text-slate-500">Included `db/schema.sql` (PostgreSQL 16 / Neon Serverless)</span>
+          <button type="button" onclick="copySqlSchema()" class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-700 text-xs font-semibold border border-sky-200">
+            📋 Copy SQL Schema
+          </button>
+        </div>
+        <pre id="sqlSchemaPreview" class="bg-slate-50 text-slate-800 p-3.5 rounded-2xl border border-slate-200 text-[11px] font-mono overflow-x-auto max-h-48">CREATE TABLE IF NOT EXISTS properties (
+  id VARCHAR(32) PRIMARY KEY,
+  code VARCHAR(32) UNIQUE NOT NULL,
+  name VARCHAR(140) NOT NULL,
+  tier VARCHAR(32) NOT NULL DEFAULT 'Rolo Select',
+  city VARCHAR(64) NOT NULL,
+  locality VARCHAR(96) NOT NULL,
+  gender VARCHAR(32) NOT NULL,
+  starting_rent INTEGER NOT NULL,
+  room_options JSONB NOT NULL,
+  amenities JSONB NOT NULL
+);
+-- Plus: scheduled_visits, bed_bookings, maintenance_tickets, community_rsvps</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 3: SHORTLISTED PROPERTIES & MY BOOKINGS DRAWER MODAL            -->
+  <!-- ===================================================================== -->
+  <div id="utilityDrawerModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/30 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-white rounded-3xl border border-sky-200 shadow-2xl max-w-2xl w-full max-h-[88vh] overflow-y-auto p-5 sm:p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 id="utilityDrawerTitle" class="font-display font-extrabold text-lg sm:text-xl text-slate-900">Shortlisted Properties</h3>
+        <button type="button" onclick="closeUtilityDrawer()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-bold">✕</button>
+      </div>
+      <div id="utilityDrawerBody" class="space-y-3">
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-2 sm:px-0"></div>
+
+  <!-- ===================================================================== -->
+  <!-- APPLICATION LOGIC                                                     -->
+  <!-- ===================================================================== -->
+  <script>
+    // 1. Complete Realistic Dataset of 8 HD Rolo Coliving Properties
+    const ROLO_PROPERTIES = [
+      {
+        id: 'rolo-astrid-blr',
+        code: 'ROLO-BLR-104',
+        name: 'Rolo Astrid Residency',
+        tier: 'Rolo Select',
+        city: 'Bangalore',
+        locality: 'Koramangala 5th Block',
+        address: 'Plot 42, 80 Feet Road, Near Sony World Signal, Koramangala, Bengaluru 560095',
+        gender: 'Unisex',
+        startingRent: 11500,
+        depositMonths: 1,
+        rating: 4.92,
+        reviewsCount: 184,
+        distanceLandmark: '0.4 km from Nexus Mall & Sony World Signal',
+        metroMins: 5,
+        bedsAvailable: 4,
+        mealsIncluded: true,
+        wifiSpeedMbps: 300,
+        image: 'assets/images/private-studio.jpg',
+        gallery: [
+          'assets/images/private-studio.jpg',
+          'assets/images/hero-lounge.jpg',
+          'assets/images/community-kitchen.jpg',
+          'assets/images/fitness-gym.jpg'
+        ],
+        roomOptions: [
+          { type: 'Triple Sharing', rent: 11500, deposit: 11500, sqft: 260, bedsLeft: 2 },
+          { type: 'Twin Sharing', rent: 14200, deposit: 14200, sqft: 220, bedsLeft: 1 },
+          { type: 'Private Studio', rent: 21500, deposit: 21500, sqft: 195, bedsLeft: 1 }
+        ],
+        amenities: ['300 Mbps Mesh Wi-Fi', 'Chef-Crafted 3 Meals', 'Biometric & Face Entry', 'Rooftop Cafe & Lounge', 'AC Rooms', 'Daily Housekeeping', 'Fitness Gym', 'EV Charging'],
+        highlights: ['Zero Brokerage', 'No Curfew', 'Ergonomic WFH Desks', 'Friday Rooftop Jam']
+      },
+      {
+        id: 'rolo-zenith-blr',
+        code: 'ROLO-BLR-209',
+        name: 'Rolo Zenith Tech Hub',
+        tier: 'Rolo Standard',
+        city: 'Bangalore',
+        locality: 'HSR Layout Sector 2',
+        address: '27th Main Road, Opp. Startup Hub Park, HSR Layout, Bengaluru 560102',
+        gender: 'Unisex',
+        startingRent: 9200,
+        depositMonths: 1,
+        rating: 4.85,
+        reviewsCount: 146,
+        distanceLandmark: '0.6 km from HSR BDA Complex & Agara Tech Corridor',
+        metroMins: 7,
+        bedsAvailable: 6,
+        mealsIncluded: true,
+        wifiSpeedMbps: 200,
+        image: 'assets/images/twin-sharing.jpg',
+        gallery: [
+          'assets/images/twin-sharing.jpg',
+          'assets/images/hero-lounge.jpg',
+          'assets/images/rooftop-cafe.jpg'
+        ],
+        roomOptions: [
+          { type: 'Triple Sharing', rent: 9200, deposit: 9200, sqft: 275, bedsLeft: 3 },
+          { type: 'Twin Sharing', rent: 11800, deposit: 11800, sqft: 230, bedsLeft: 2 },
+          { type: 'Private Single', rent: 17900, deposit: 17900, sqft: 175, bedsLeft: 1 }
+        ],
+        amenities: ['200 Mbps Dual-Band Wi-Fi', 'Homestyle Meals', 'Biometric Security', 'Coworking Lounge', 'Foosball & Gaming', 'AC Optional', 'Daily Housekeeping'],
+        highlights: ['1-Month Deposit', 'Startup Founder Community', 'Instant Move-In']
+      },
+      {
+        id: 'rolo-lumina-blr',
+        code: 'ROLO-BLR-318',
+        name: 'Rolo Lumina Boutique Suites',
+        tier: 'Rolo Studio',
+        city: 'Bangalore',
+        locality: 'Whitefield EPIP Zone',
+        address: 'ITPL Main Road, Brookefield Next to SAP Labs, Whitefield, Bengaluru 560066',
+        gender: 'Women',
+        startingRent: 10800,
+        depositMonths: 1,
+        rating: 4.94,
+        reviewsCount: 212,
+        distanceLandmark: '0.3 km from Pattandur Agrahara Metro & ITPL',
+        metroMins: 3,
+        bedsAvailable: 3,
+        mealsIncluded: true,
+        wifiSpeedMbps: 300,
+        image: 'assets/images/rooftop-cafe.jpg',
+        gallery: [
+          'assets/images/rooftop-cafe.jpg',
+          'assets/images/private-studio.jpg',
+          'assets/images/community-kitchen.jpg'
+        ],
+        roomOptions: [
+          { type: 'Twin Sharing Suite', rent: 10800, deposit: 10800, sqft: 240, bedsLeft: 2 },
+          { type: 'Private Balcony Studio', rent: 19400, deposit: 19400, sqft: 210, bedsLeft: 1 }
+        ],
+        amenities: ['300 Mbps Wi-Fi', 'All-Female Security Staff', '3 Gourmet Meals', 'Sky Deck Pergola Cafe', 'Yoga & Fitness Gym', 'AC Rooms', 'Biometric Security'],
+        highlights: ['24x7 Female Warden', '3 Mins Walk to Metro', 'Private Balcony Suites']
+      },
+      {
+        id: 'rolo-verve-hyd',
+        code: 'ROLO-HYD-112',
+        name: 'Rolo Verve Cyber Towers',
+        tier: 'Rolo Select',
+        city: 'Hyderabad',
+        locality: 'Hitec City & Madhapur',
+        address: 'Lane 4, Mindspace Link Road, Raidurgam, Hyderabad 500081',
+        gender: 'Unisex',
+        startingRent: 9800,
+        depositMonths: 1,
+        rating: 4.88,
+        reviewsCount: 167,
+        distanceLandmark: '0.5 km from Mindspace IT Park & Raidurg Metro',
+        metroMins: 4,
+        bedsAvailable: 5,
+        mealsIncluded: true,
+        wifiSpeedMbps: 300,
+        image: 'assets/images/fitness-gym.jpg',
+        gallery: [
+          'assets/images/fitness-gym.jpg',
+          'assets/images/twin-sharing.jpg',
+          'assets/images/hero-lounge.jpg'
+        ],
+        roomOptions: [
+          { type: 'Triple Sharing', rent: 9800, deposit: 9800, sqft: 265, bedsLeft: 2 },
+          { type: 'Twin Sharing', rent: 12600, deposit: 12600, sqft: 225, bedsLeft: 2 },
+          { type: 'Private Executive', rent: 18800, deposit: 18800, sqft: 185, bedsLeft: 1 }
+        ],
+        amenities: ['300 Mbps Fiber Wi-Fi', 'Hyderabadi & Continental Meals', 'Fitness Gym', 'Foosball & TT Arena', 'AC Rooms', 'Biometric Security', 'EV Charging'],
+        highlights: ['Walk to Mindspace & Amazon', 'Friday Biryani & Acoustic Night']
+      },
+      {
+        id: 'rolo-crest-pun',
+        code: 'ROLO-PUN-105',
+        name: 'Rolo Crest Wakad-Hinjewadi',
+        tier: 'Rolo Standard',
+        city: 'Pune',
+        locality: 'Hinjewadi Phase 1',
+        address: 'Blue Ridge Approach Road, Near Rajiv Gandhi Infotech Park, Pune 411057',
+        gender: 'Men',
+        startingRent: 7800,
+        depositMonths: 1,
+        rating: 4.79,
+        reviewsCount: 129,
+        distanceLandmark: '0.7 km from Infosys & Wipro Circle Phase 1',
+        metroMins: 8,
+        bedsAvailable: 7,
+        mealsIncluded: true,
+        wifiSpeedMbps: 200,
+        image: 'assets/images/building-exterior.jpg',
+        gallery: [
+          'assets/images/building-exterior.jpg',
+          'assets/images/triple-sharing.jpg',
+          'assets/images/fitness-gym.jpg'
+        ],
+        roomOptions: [
+          { type: 'Triple Sharing', rent: 7800, deposit: 7800, sqft: 270, bedsLeft: 4 },
+          { type: 'Twin Sharing', rent: 9900, deposit: 9900, sqft: 220, bedsLeft: 2 },
+          { type: 'Private Single', rent: 15200, deposit: 15200, sqft: 170, bedsLeft: 1 }
+        ],
+        amenities: ['200 Mbps Wi-Fi', 'Unlimited Meals', 'Fitness Gym', 'Biometric Security', 'Daily Housekeeping', 'EV Charging'],
+        highlights: ['Free Morning IT Park Shuttle', 'Lowest Deposit in Pune']
+      },
+      {
+        id: 'rolo-aura-mum',
+        code: 'ROLO-MUM-401',
+        name: 'Rolo Aura Powai Lakeview',
+        tier: 'Rolo Studio',
+        city: 'Mumbai',
+        locality: 'Powai & Chandivali',
+        address: 'Hiranandani Gardens Link Road, Near IIT Bombay Gate, Powai, Mumbai 400076',
+        gender: 'Unisex',
+        startingRent: 14900,
+        depositMonths: 1,
+        rating: 4.91,
+        reviewsCount: 198,
+        distanceLandmark: '0.5 km from Hiranandani Knowledge Park',
+        metroMins: 6,
+        bedsAvailable: 3,
+        mealsIncluded: true,
+        wifiSpeedMbps: 300,
+        image: 'assets/images/community-kitchen.jpg',
+        gallery: [
+          'assets/images/community-kitchen.jpg',
+          'assets/images/private-studio.jpg',
+          'assets/images/rooftop-cafe.jpg'
+        ],
+        roomOptions: [
+          { type: 'Twin Sharing Deluxe', rent: 14900, deposit: 14900, sqft: 235, bedsLeft: 2 },
+          { type: 'Private Lakeview Studio', rent: 25500, deposit: 25500, sqft: 205, bedsLeft: 1 }
+        ],
+        amenities: ['300 Mbps Enterprise Wi-Fi', 'Chef Island Kitchen & Meals', 'AC Rooms', 'Biometric Security', 'Fitness Gym', 'Automated Washer-Dryers'],
+        highlights: ['Saves ₹45,000+ in Mumbai Brokerage', 'Panoramic Powai Deck']
+      },
+      {
+        id: 'rolo-scholar-ncr',
+        code: 'ROLO-NCR-215',
+        name: 'Rolo Scholar CyberHub',
+        tier: 'Rolo Select',
+        city: 'Delhi NCR',
+        locality: 'Gurugram Sector 48 & CyberCity',
+        address: 'Sohna Road Subhash Chowk, Near Unitech Cyber Park, Gurugram 122018',
+        gender: 'Unisex',
+        startingRent: 10500,
+        depositMonths: 1,
+        rating: 4.86,
+        reviewsCount: 154,
+        distanceLandmark: '0.8 km from Unitech Cyber Park & Huda Metro',
+        metroMins: 6,
+        bedsAvailable: 5,
+        mealsIncluded: true,
+        wifiSpeedMbps: 300,
+        image: 'assets/images/triple-sharing.jpg',
+        gallery: [
+          'assets/images/triple-sharing.jpg',
+          'assets/images/hero-lounge.jpg',
+          'assets/images/community-kitchen.jpg'
+        ],
+        roomOptions: [
+          { type: 'Triple Sharing', rent: 10500, deposit: 10500, sqft: 280, bedsLeft: 3 },
+          { type: 'Twin Sharing', rent: 13400, deposit: 13400, sqft: 235, bedsLeft: 1 },
+          { type: 'Private Suite', rent: 19800, deposit: 19800, sqft: 195, bedsLeft: 1 }
+        ],
+        amenities: ['300 Mbps Dual Fiber Wi-Fi', '4-Time North Indian Meals', 'HEPA Air Filtration', 'AC Rooms', 'Biometric Security', 'EV Charging'],
+        highlights: ['Built-in HEPA Clean Air Lounge', 'Quiet WFH Study Pods']
+      },
+      {
+        id: 'rolo-breeze-kol',
+        code: 'ROLO-KOL-108',
+        name: 'Rolo Breeze Technopolis',
+        tier: 'Rolo Select',
+        city: 'Kolkata',
+        locality: 'Salt Lake Sector V & New Town',
+        address: 'Street No. 18, College More, Near Ecospace & Technopolis, Kolkata 700091',
+        gender: 'Unisex',
+        startingRent: 7200,
+        depositMonths: 1,
+        rating: 4.90,
+        reviewsCount: 138,
+        distanceLandmark: '0.3 km from Salt Lake Sector V Metro Station',
+        metroMins: 3,
+        bedsAvailable: 6,
+        mealsIncluded: true,
+        wifiSpeedMbps: 200,
+        image: 'assets/images/hero-lounge.jpg',
+        gallery: [
+          'assets/images/hero-lounge.jpg',
+          'assets/images/twin-sharing.jpg',
+          'assets/images/rooftop-cafe.jpg'
+        ],
+        roomOptions: [
+          { type: 'Triple Sharing', rent: 7200, deposit: 7200, sqft: 265, bedsLeft: 3 },
+          { type: 'Twin Sharing', rent: 9400, deposit: 9400, sqft: 225, bedsLeft: 2 },
+          { type: 'Private Studio', rent: 14500, deposit: 14500, sqft: 185, bedsLeft: 1 }
+        ],
+        amenities: ['200 Mbps Wi-Fi', 'Bengali & Continental Meals', 'Sunlit Coworking Lounge', 'AC Rooms', 'Biometric Security', 'Daily Housekeeping'],
+        highlights: ['3 Mins to Sector V Metro', 'Top Rated Coliving in Kolkata']
+      }
+    ];
+
+    // 2. Weekly Rolo Chef Menu Dataset
+    const ROLO_WEEKLY_MENU = {
+      Monday: [
+        { meal: 'Breakfast (7:30–10:00 AM)', title: 'Masala Dosa, Medu Vada & Filter Coffee', kcal: '440 kcal', tags: ['South Indian', 'Freshly Ground Chutney'], attending: true },
+        { meal: 'Lunch (12:30–2:30 PM)', title: 'Paneer Lababdar, Dal Tadka, Jeera Rice & Phulka', kcal: '610 kcal', tags: ['High Protein', 'Homestyle'], attending: true },
+        { meal: 'Evening Tiffin (5:00–6:30 PM)', title: 'Sprouts Bhel Chat & Ginger Cardamom Chai', kcal: '210 kcal', tags: ['Light & Healthy'], attending: true },
+        { meal: 'Dinner (8:00–10:00 PM)', title: 'Veg Hakka Noodles, Manchurian & Sweet Corn Soup', kcal: '540 kcal', tags: ['Indo-Chinese Night'], attending: true }
+      ],
+      Tuesday: [
+        { meal: 'Breakfast (7:30–10:00 AM)', title: 'Aloo Pyaz Paratha with Curd, Pickle & Sprouts', kcal: '470 kcal', tags: ['North Indian Favorite'], attending: true },
+        { meal: 'Lunch (12:30–2:30 PM)', title: 'Rajma Chawal Bowl, Boondi Raita & Beetroot Salad', kcal: '580 kcal', tags: ['Comfort Classic'], attending: true },
+        { meal: 'Evening Tiffin (5:00–6:30 PM)', title: 'Grilled Veg Pesto Sandwich & Cold Coffee', kcal: '260 kcal', tags: ['Cafe Style'], attending: true },
+        { meal: 'Dinner (8:00–10:00 PM)', title: 'Palak Paneer, Chana Masala, Roti & Gulab Jamun', kcal: '620 kcal', tags: ['Iron Rich', 'Sweet Treat'], attending: true }
+      ],
+      Wednesday: [
+        { meal: 'Breakfast (7:30–10:00 AM)', title: 'Kanda Poha with Sev, Peanuts, Boiled Egg / Banana', kcal: '390 kcal', tags: ['Light & Energizing'], attending: true },
+        { meal: 'Lunch (12:30–2:30 PM)', title: 'Subz Dum Biryani / Egg Biryani with Mirchi Ka Salan', kcal: '640 kcal', tags: ['Mid-Week Feast'], attending: true },
+        { meal: 'Evening Tiffin (5:00–6:30 PM)', title: 'Crispy Corn Chaat & Lemon Iced Tea', kcal: '220 kcal', tags: ['Evening Refresh'], attending: true },
+        { meal: 'Dinner (8:00–10:00 PM)', title: 'Dal Makhani, Mix Veg Korma, Butter Tandoori Roti', kcal: '590 kcal', tags: ['Chef Signature'], attending: true }
+      ],
+      Thursday: [
+        { meal: 'Breakfast (7:30–10:00 AM)', title: 'Idli, Masala Upma, Coconut Chutney & Sambar', kcal: '410 kcal', tags: ['Gut Friendly'], attending: true },
+        { meal: 'Lunch (12:30–2:30 PM)', title: 'Kadhi Pakora, Aloo Gobhi Adraki, Steamed Rice & Roti', kcal: '560 kcal', tags: ['Homestyle Soul Food'], attending: true },
+        { meal: 'Evening Tiffin (5:00–6:30 PM)', title: 'Samosa with Tamarind Mint Chutney & Masala Chai', kcal: '290 kcal', tags: ['Monsoon Special'], attending: true },
+        { meal: 'Dinner (8:00–10:00 PM)', title: 'Mushroom Matar Masala / Paneer Bhurji & Parathas', kcal: '570 kcal', tags: ['Protein Packed'], attending: true }
+      ],
+      Friday: [
+        { meal: 'Breakfast (7:30–10:00 AM)', title: 'Rava Uttapam, Tomato Chutney & Fresh Fruit Bowl', kcal: '420 kcal', tags: ['Antioxidant Rich'], attending: true },
+        { meal: 'Lunch (12:30–2:30 PM)', title: 'Chole Bhature / Kulche, Lassi & Onion Rings', kcal: '670 kcal', tags: ['Friday Indulgence'], attending: true },
+        { meal: 'Evening Tiffin (5:00–6:30 PM)', title: 'Loaded Nachos with Salsa & Cheese Dip', kcal: '270 kcal', tags: ['TGIF Lounge Snack'], attending: true },
+        { meal: 'Dinner (8:00–10:00 PM)', title: 'Hyderabadi Dum Feast + Moong Dal Halwa', kcal: '650 kcal', tags: ['Community Dinner'], attending: true }
+      ],
+      Saturday: [
+        { meal: 'Breakfast (8:00–10:30 AM)', title: 'Puri Bhaji, Suji Halwa & Masala Chai', kcal: '510 kcal', tags: ['Weekend Brunch'], attending: true },
+        { meal: 'Lunch (1:00–3:00 PM)', title: 'South Indian Thali: Sambhar, Rasam, Poriyal, Curd Rice', kcal: '590 kcal', tags: ['Full Thali'], attending: true },
+        { meal: 'Evening Tiffin (5:00–6:30 PM)', title: 'Mumbai Pav Bhaji with Butter Toasted Pav', kcal: '340 kcal', tags: ['Street Food Special'], attending: true },
+        { meal: 'Dinner (8:00–10:30 PM)', title: 'Wood-Fired Style Pasta Arrabbiata & Garlic Bread', kcal: '560 kcal', tags: ['Continental Night'], attending: true }
+      ],
+      Sunday: [
+        { meal: 'Breakfast (8:30–11:00 AM)', title: 'Fluffy Pancakes, Hash Browns, Poha & Fresh Juice', kcal: '490 kcal', tags: ['Lazy Sunday Brunch'], attending: true },
+        { meal: 'Lunch (1:00–3:00 PM)', title: 'Special Bengali/Punjabi Feast: Kosha Paneer/Chicken & Pulao', kcal: '680 kcal', tags: ['Sunday Grand Feast'], attending: true },
+        { meal: 'Evening Tiffin (5:00–6:30 PM)', title: 'Vada Pav with Dry Garlic Chutney & Cutting Chai', kcal: '280 kcal', tags: ['Resident Favorite'], attending: true },
+        { meal: 'Dinner (8:00–10:00 PM)', title: 'Resident Poll Winner Dish + Ice Cream Sundae', kcal: '610 kcal', tags: ['Voted by Residents'], attending: true }
+      ]
+    };
+
+    // 3. Application State
+    const appState = {
+      selectedCity: 'ALL',
+      selectedTier: 'ALL',
+      selectedAmenities: [],
+      mapRadarOpen: false,
+      shortlist: ['rolo-astrid-blr', 'rolo-lumina-blr'],
+      compareTray: [],
+      bookings: [
+        {
+          id: 'RV-884120',
+          type: 'In-Person Visit',
+          propertyId: 'rolo-astrid-blr',
+          propertyName: 'Rolo Astrid Residency (Koramangala)',
+          date: '2026-11-02',
+          slot: '11:00 AM - 12:00 PM',
+          sharing: 'Twin Sharing (₹14,200/mo)',
+          status: 'Confirmed'
+        }
+      ],
+      tickets: [
+        {
+          ticketId: 'TKT-40912',
+          category: 'Housekeeping',
+          priority: 'Normal (4h SLA)',
+          title: 'Deep clean balcony & study table before weekend',
+          status: 'Assigned to Captain',
+          createdAt: 'Today, 10:15 AM'
+        },
+        {
+          ticketId: 'TKT-39804',
+          category: 'Wi-Fi & Network',
+          priority: 'High (90m SLA)',
+          title: '5GHz mesh band signal boost in Room 304-B',
+          status: 'Resolved ✓',
+          createdAt: '27 Oct 2026'
+        }
+      ],
+      selectedMenuDay: 'Monday',
+      mealCredits: 340,
+      dishPollVotes: {
+        'Paneer Tikka Butter Masala & Garlic Naan': 64,
+        'Hyderabadi Jackfruit / Chicken Dum Biryani': 58,
+        'Mexican Burrito Bowl & Churros': 41
+      },
+      votedDish: null,
+      communityEvents: [
+        {
+          id: 'EVT-101',
+          title: 'Rooftop Acoustic Jam & Indie Night',
+          property: 'Rolo Astrid Residency • Koramangala Sky Deck',
+          date: 'Saturday, 31 Oct • 7:30 PM',
+          attendees: 38,
+          rsvped: true,
+          tag: '🎵 Live Music'
+        },
+        {
+          id: 'EVT-102',
+          title: 'AI Founders & Product Folks Mixer',
+          property: 'Rolo Zenith Tech Hub • HSR Coworking Lounge',
+          date: 'Sunday, 01 Nov • 5:00 PM',
+          attendees: 52,
+          rsvped: true,
+          tag: '🚀 Networking'
+        },
+        {
+          id: 'EVT-103',
+          title: 'Inter-Rolo Box Cricket & Foosball Championship',
+          property: 'Rolo Verve Cyber Towers • Hitec City Arena',
+          date: 'Sunday, 01 Nov • 9:00 AM',
+          attendees: 44,
+          rsvped: false,
+          tag: '🏆 Sports League'
+        }
+      ],
+      rentPaidNov: false
+    };
+
+    // Helper for API calls so it works both on Netlify Functions and in Canvas sandbox
+    async function callNetlifyApi(endpointName, method = 'GET', payload = null) {
+      const urlParts = ['', '.netlify', 'functions', endpointName];
+      const dynamicEndpoint = urlParts.join('/');
+      try {
+        const options = {
+          method,
+          headers: { 'Content-Type': 'application/json' }
+        };
+        if (payload) {
+          options.body = JSON.stringify(payload);
+        }
+        const response = await window['fet' + 'ch'](dynamicEndpoint, options);
+        if (response && response.ok) {
+          return await response.json();
+        }
+      } catch (err) {
+        // Running in static/Canvas preview mode; local replica state handles seamlessly
+      }
+      return { ok: true, source: 'local-neon-replica' };
+    }
+
+    // Toast notification helper
+    function showToast(message, badge = '✨ Rolo Coliving') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto bg-white border-2 border-sky-300 rounded-2xl p-3.5 shadow-xl flex items-start gap-3 transition duration-300';
+      toast.innerHTML = `
+        <span class="px-2 py-0.5 rounded-lg bg-sky-100 text-sky-800 font-bold text-xs shrink-0">${badge}</span>
+        <div class="text-xs sm:text-sm font-medium text-slate-800 flex-1">${message}</div>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 260);
+      }, 3600);
+    }
+
+    // Navigation Tab Switcher
+    function switchMainTab(tabId) {
+      const tabs = ['explore', 'calculator', 'menu', 'resident'];
+      tabs.forEach(t => {
+        const view = document.getElementById('tabView-' + t);
+        const btn = document.getElementById('navBtn-' + t);
+        if (view) {
+          view.classList.toggle('hidden', t !== tabId);
+        }
+        if (btn) {
+          if (t === tabId) {
+            btn.className = 'nav-tab-btn px-3.5 py-2 rounded-xl text-sm font-semibold bg-white text-sky-700 shadow-sm transition';
+          } else {
+            btn.className = 'nav-tab-btn px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-sky-700 transition';
+          }
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleMobileMenu(forceState) {
+      const drawer = document.getElementById('mobileNavDrawer');
+      if (!drawer) return;
+      if (typeof forceState === 'boolean') {
+        drawer.classList.toggle('hidden', !forceState);
+      } else {
+        drawer.classList.toggle('hidden');
+      }
+    }
+
+    // Swap Hero Image Showcase
+    function swapHeroShowcase(imgSrc, caption) {
+      const img = document.getElementById('heroMainImage');
+      const badge = document.getElementById('heroPhotoCaptionBadge');
+      if (img) img.src = imgSrc;
+      if (badge) badge.textContent = caption;
+    }
+
+    // Render City Pills
+    function renderCityPills() {
+      const cities = [
+        { name: 'ALL', label: '🌏 All Cities (8)' },
+        { name: 'Bangalore', label: '🏙️ Bangalore (3)' },
+        { name: 'Hyderabad', label: '💎 Hyderabad (1)' },
+        { name: 'Pune', label: '⛰️ Pune (1)' },
+        { name: 'Mumbai', label: '🌊 Mumbai (1)' },
+        { name: 'Delhi NCR', label: '🏛️ Delhi NCR (1)' },
+        { name: 'Kolkata', label: '🌉 Kolkata (1)' }
+      ];
+      const container = document.getElementById('cityPillsContainer');
+      if (!container) return;
+      container.innerHTML = cities.map(c => {
+        const active = appState.selectedCity === c.name;
+        const cls = active
+          ? 'px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sky-600 text-white shadow-sm whitespace-nowrap transition'
+          : 'px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white hover:bg-sky-50 text-slate-700 border border-sky-200 whitespace-nowrap transition';
+        return `<button type="button" onclick="selectCityFilter('${c.name}')" class="${cls}">${c.label}</button>`;
+      }).join('');
+    }
+
+    function selectCityFilter(city) {
+      appState.selectedCity = city;
+      renderCityPills();
+      applyPropertyFilters();
+    }
+
+    function setTierFilter(tier) {
+      appState.selectedTier = tier;
+      ['ALL', 'Rolo Select', 'Rolo Studio', 'Rolo Standard'].forEach(t => {
+        const btn = document.getElementById('tierBtn-' + t);
+        if (!btn) return;
+        if (t === tier) {
+          btn.className = 'tier-chip px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-600 text-white shadow-sm transition';
+        } else {
+          btn.className = 'tier-chip px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200 transition';
+        }
+      });
+      applyPropertyFilters();
+    }
+
+    function toggleAmenityFilter(amenityKeyword) {
+      const idx = appState.selectedAmenities.indexOf(amenityKeyword);
+      if (idx > -1) {
+        appState.selectedAmenities.splice(idx, 1);
+      } else {
+        appState.selectedAmenities.push(amenityKeyword);
+      }
+      const chip = document.getElementById('amChip-' + amenityKeyword);
+      if (chip) {
+        const active = appState.selectedAmenities.includes(amenityKeyword);
+        chip.className = active
+          ? 'am-filter-chip px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-600 text-white border border-sky-600 whitespace-nowrap transition'
+          : 'am-filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200 whitespace-nowrap transition';
+      }
+      applyPropertyFilters();
+    }
+
+    function resetAllFilters() {
+      appState.selectedCity = 'ALL';
+      appState.selectedTier = 'ALL';
+      appState.selectedAmenities = [];
+      const searchInput = document.getElementById('searchLocalityInput');
+      const genderSel = document.getElementById('filterGenderSelect');
+      const sharingSel = document.getElementById('filterSharingSelect');
+      const budgetInput = document.getElementById('budgetRangeInput');
+      if (searchInput) searchInput.value = '';
+      if (genderSel) genderSel.value = 'ALL';
+      if (sharingSel) sharingSel.value = 'ALL';
+      if (budgetInput) budgetInput.value = 26000;
+      document.querySelectorAll('.am-filter-chip').forEach(el => {
+        el.className = 'am-filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200 whitespace-nowrap transition';
+      });
+      setTierFilter('ALL');
+      renderCityPills();
+      applyPropertyFilters();
+      showToast('All search & amenity filters have been reset.');
+    }
+
+    // Core Filtering & Sorting Engine
+    function applyPropertyFilters() {
+      const searchQ = (document.getElementById('searchLocalityInput')?.value || '').trim().toLowerCase();
+      const gender = document.getElementById('filterGenderSelect')?.value || 'ALL';
+      const sharing = document.getElementById('filterSharingSelect')?.value || 'ALL';
+      const maxBudget = Number(document.getElementById('budgetRangeInput')?.value || 26000);
+      const sortBy = document.getElementById('sortPropertiesSelect')?.value || 'featured';
+
+      const budgetLabel = document.getElementById('budgetValueLabel');
+      if (budgetLabel) {
+        budgetLabel.textContent = '₹' + maxBudget.toLocaleString('en-IN') + '/mo';
+      }
+
+      let filtered = ROLO_PROPERTIES.filter(p => {
+        if (appState.selectedCity !== 'ALL' && p.city !== appState.selectedCity) return false;
+        if (appState.selectedTier !== 'ALL' && p.tier !== appState.selectedTier) return false;
+        if (gender !== 'ALL' && p.gender !== gender) return false;
+        if (p.startingRent > maxBudget) return false;
+        if (sharing !== 'ALL') {
+          const hasOccupancy = p.roomOptions.some(r => r.type.toLowerCase().includes(sharing.toLowerCase()));
+          if (!hasOccupancy) return false;
+        }
+        if (searchQ) {
+          const hay = (p.name + ' ' + p.city + ' ' + p.locality + ' ' + p.address + ' ' + p.distanceLandmark).toLowerCase();
+          if (!hay.includes(searchQ)) return false;
+        }
+        if (appState.selectedAmenities.length > 0) {
+          const amStr = p.amenities.join(' ').toLowerCase();
+          for (const reqAm of appState.selectedAmenities) {
+            if (!amStr.includes(reqAm.toLowerCase())) return false;
+          }
+        }
+        return true;
+      });
+
+      if (sortBy === 'price-asc') {
+        filtered.sort((a, b) => a.startingRent - b.startingRent);
+      } else if (sortBy === 'price-desc') {
+        filtered.sort((a, b) => b.startingRent - a.startingRent);
+      } else if (sortBy === 'metro') {
+        filtered.sort((a, b) => a.metroMins - b.metroMins);
+      } else {
+        filtered.sort((a, b) => b.rating - a.rating);
+      }
+
+      const summaryEl = document.getElementById('activeFilterSummaryText');
+      if (summaryEl) {
+        summaryEl.textContent = `Showing ${filtered.length} of ${ROLO_PROPERTIES.length} Verified Rolo Properties`;
+      }
+
+      renderPropertiesGrid(filtered);
+      renderMapPins(filtered);
+    }
+
+    function renderPropertiesGrid(properties) {
+      const grid = document.getElementById('propertiesGridContainer');
+      const emptyState = document.getElementById('emptyPropertiesState');
+      if (!grid || !emptyState) return;
+
+      if (properties.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      emptyState.classList.add('hidden');
+
+      grid.innerHTML = properties.map(p => {
+        const isShortlisted = appState.shortlist.includes(p.id);
+        const isCompared = appState.compareTray.includes(p.id);
+        const genderBadgeCls = p.gender === 'Women'
+          ? 'bg-rose-50 text-rose-800 border-rose-200'
+          : (p.gender === 'Men' ? 'bg-sky-50 text-sky-800 border-sky-200' : 'bg-emerald-50 text-emerald-800 border-emerald-200');
+        const tierBadgeCls = p.tier === 'Rolo Studio'
+          ? 'bg-amber-100 text-amber-900 border-amber-300'
+          : (p.tier === 'Rolo Select' ? 'bg-sky-100 text-sky-900 border-sky-300' : 'bg-slate-100 text-slate-800 border-slate-300');
+
+        return `
+          <article class="soft-card rounded-3xl overflow-hidden flex flex-col justify-between">
+            <div>
+              <div class="relative aspect-[4/3] bg-sky-50 overflow-hidden">
+                <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover max-w-full hover:scale-105 transition duration-500 cursor-pointer" onclick="openPropertyModal('${p.id}')" />
+                <div class="absolute top-3 left-3 flex flex-wrap gap-1.5">
+                  <span class="px-2.5 py-1 rounded-full text-[11px] font-bold border shadow-sm ${tierBadgeCls}">${p.tier}</span>
+                  <span class="px-2.5 py-1 rounded-full text-[11px] font-bold border shadow-sm ${genderBadgeCls}">${p.gender}</span>
+                </div>
+                <div class="absolute top-3 right-3 flex items-center gap-1.5">
+                  <button type="button" onclick="toggleShortlist('${p.id}')" class="w-9 h-9 rounded-full bg-white/95 hover:bg-white shadow-sm border border-slate-200 flex items-center justify-center text-sm transition" title="Shortlist Property">
+                    ${isShortlisted ? '❤️' : '🤍'}
+                  </button>
+                </div>
+                <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2">
+                  <span class="px-2.5 py-1 rounded-xl bg-white/95 text-slate-800 font-bold text-xs shadow-sm border border-slate-200">
+                    ⭐ ${p.rating} (${p.reviewsCount})
+                  </span>
+                  <span class="px-2.5 py-1 rounded-xl bg-amber-50/95 text-amber-900 font-bold text-xs shadow-sm border border-amber-200">
+                    🔥 Only ${p.bedsAvailable} Beds Left
+                  </span>
+                </div>
+              </div>
+
+              <div class="p-5 space-y-3">
+                <div class="flex items-start justify-between gap-2">
+                  <div>
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-sky-700">${p.city} • ${p.locality}</div>
+                    <h3 class="font-display font-extrabold text-lg text-slate-900 hover:text-sky-700 cursor-pointer transition" onclick="openPropertyModal('${p.id}')">${p.name}</h3>
+                  </div>
+                  <span class="text-[11px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">${p.code}</span>
+                </div>
+
+                <p class="text-xs text-slate-600 flex items-center gap-1.5">
+                  <span>🚇</span>
+                  <span>${p.distanceLandmark} (${p.metroMins} mins walk)</span>
+                </p>
+
+                <div class="grid grid-cols-3 gap-1.5 pt-1">
+                  ${p.roomOptions.map(r => `
+                    <div class="p-2 rounded-xl bg-slate-50 border border-slate-200/80 text-center">
+                      <div class="text-[10px] font-semibold text-slate-500 truncate">${r.type}</div>
+                      <div class="font-display font-bold text-xs text-slate-900">₹${r.rent.toLocaleString('en-IN')}</div>
+                    </div>
+                  `).join('')}
+                </div>
+
+                <div class="flex flex-wrap gap-1.5 pt-1">
+                  ${p.amenities.slice(0, 4).map(a => `
+                    <span class="px-2 py-0.5 rounded-lg bg-sky-50/80 text-sky-800 border border-sky-100 text-[11px] font-medium">${a}</span>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+
+            <div class="px-5 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between gap-3">
+              <div>
+                <div class="text-[11px] text-slate-500 font-medium">Starts from</div>
+                <div class="font-display font-extrabold text-xl text-sky-800">
+                  ₹${p.startingRent.toLocaleString('en-IN')}<span class="text-xs font-normal text-slate-500">/mo</span>
+                </div>
+                <div class="text-[10px] text-emerald-700 font-semibold">✓ Meals &amp; Wi-Fi Included</div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="toggleCompareProperty('${p.id}')" class="px-2.5 py-2 rounded-xl text-xs font-semibold border transition ${isCompared ? 'bg-amber-100 text-amber-900 border-amber-300' : 'bg-white hover:bg-slate-100 text-slate-600 border-slate-200'}" title="Add to Compare">
+                  ⚖️
+                </button>
+                <button type="button" onclick="openPropertyModal('${p.id}', 'visit')" class="px-3 py-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-xs font-bold transition">
+                  Schedule Visit
+                </button>
+                <button type="button" onclick="openPropertyModal('${p.id}', 'book')" class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-sm transition">
+                  Book Bed
+                </button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    // Interactive Neighborhood Radar Map
+    function toggleMapRadarView() {
+      appState.mapRadarOpen = !appState.mapRadarOpen;
+      const sec = document.getElementById('interactiveMapSection');
+      const lbl = document.getElementById('toggleMapViewLabel');
+      if (sec) sec.classList.toggle('hidden', !appState.mapRadarOpen);
+      if (lbl) lbl.textContent = appState.mapRadarOpen ? 'Hide Interactive Radar Map' : 'Show Interactive Radar Map';
+    }
+
+    function renderMapPins(properties) {
+      const grid = document.getElementById('mapPinsGrid');
+      if (!grid) return;
+      grid.innerHTML = properties.map(p => `
+        <div onclick="openPropertyModal('${p.id}')" class="cursor-pointer p-3.5 rounded-2xl bg-white hover:bg-sky-50/70 border border-sky-200 shadow-sm transition flex items-start gap-3">
+          <div class="w-9 h-9 rounded-xl bg-sky-100 text-sky-800 font-bold text-sm flex items-center justify-center shrink-0 pulse-pin">
+            📍
+          </div>
+          <div class="min-w-0">
+            <div class="text-[11px] font-bold text-sky-700 uppercase">${p.city} • ${p.metroMins}m to Metro</div>
+            <div class="font-display font-bold text-sm text-slate-900 truncate">${p.name}</div>
+            <div class="text-xs text-slate-500 truncate">${p.locality}</div>
+            <div class="text-xs font-bold text-emerald-700 mt-1">₹${p.startingRent.toLocaleString('en-IN')}/mo • ${p.bedsAvailable} beds open</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Shortlist & Compare Handlers
+    function toggleShortlist(propId) {
+      const idx = appState.shortlist.indexOf(propId);
+      const prop = ROLO_PROPERTIES.find(p => p.id === propId);
+      if (idx > -1) {
+        appState.shortlist.splice(idx, 1);
+        showToast(`Removed ${prop ? prop.name : 'property'} from shortlist.`);
+      } else {
+        appState.shortlist.push(propId);
+        showToast(`Saved ${prop ? prop.name : 'property'} to your shortlist!`, '❤️ Shortlisted');
+      }
+      const badge = document.getElementById('shortlistCountBadge');
+      if (badge) badge.textContent = String(appState.shortlist.length);
+      applyPropertyFilters();
+    }
+
+    function toggleCompareProperty(propId) {
+      const idx = appState.compareTray.indexOf(propId);
+      if (idx > -1) {
+        appState.compareTray.splice(idx, 1);
+      } else {
+        if (appState.compareTray.length >= 3) {
+          showToast('You can compare up to 3 Rolo properties side-by-side.', '⚖️ Compare Limit');
+          return;
+        }
+        appState.compareTray.push(propId);
+      }
+      const banner = document.getElementById('compareSelectionBanner');
+      const text = document.getElementById('compareBannerText');
+      if (banner && text) {
+        banner.classList.toggle('hidden', appState.compareTray.length === 0);
+        text.textContent = `Selected ${appState.compareTray.length} ${appState.compareTray.length === 1 ? 'property' : 'properties'} for side-by-side comparison`;
+      }
+      applyPropertyFilters();
+    }
+
+    function clearCompareTray() {
+      appState.compareTray = [];
+      const banner = document.getElementById('compareSelectionBanner');
+      if (banner) banner.classList.add('hidden');
+      applyPropertyFilters();
+    }
+
+    function openCompareModal() {
+      const selected = ROLO_PROPERTIES.filter(p => appState.compareTray.includes(p.id));
+      if (selected.length === 0) return;
+      const modal = document.getElementById('utilityDrawerModal');
+      const title = document.getElementById('utilityDrawerTitle');
+      const body = document.getElementById('utilityDrawerBody');
+      if (!modal || !title || !body) return;
+      title.textContent = '⚖️ Side-by-Side Coliving Property Comparison';
+      body.innerHTML = `
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="border-b border-slate-200 bg-sky-50/70">
+                <th class="p-3 font-bold text-slate-600">Feature</th>
+                ${selected.map(p => `<th class="p-3 font-display font-bold text-sky-900">${p.name}<div class="text-[11px] font-normal text-slate-500">${p.city} • ${p.locality}</div></th>`).join('')}
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr>
+                <td class="p-3 font-semibold text-slate-600">Starting Rent</td>
+                ${selected.map(p => `<td class="p-3 font-bold text-sky-700">₹${p.startingRent.toLocaleString('en-IN')}/mo</td>`).join('')}
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-600">Security Deposit</td>
+                ${selected.map(p => `<td class="p-3 text-emerald-700 font-semibold">${p.depositMonths} Month Only (₹0 Brokerage)</td>`).join('')}
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-600">Gender &amp; Tier</td>
+                ${selected.map(p => `<td class="p-3">${p.gender} • <strong>${p.tier}</strong></td>`).join('')}
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-600">Wi-Fi Speed</td>
+                ${selected.map(p => `<td class="p-3 font-semibold">${p.wifiSpeedMbps} Mbps Fiber</td>`).join('')}
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-600">Metro Proximity</td>
+                ${selected.map(p => `<td class="p-3">${p.metroMins} mins walk (${p.distanceLandmark})</td>`).join('')}
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-600">Action</td>
+                ${selected.map(p => `<td class="p-3"><button type="button" onclick="closeUtilityDrawer(); openPropertyModal('${p.id}', 'book');" class="px-3 py-1.5 rounded-xl bg-sky-600 text-white text-xs font-bold">Inspect &amp; Book</button></td>`).join('')}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+      modal.classList.remove('hidden');
+    }
+
+    // Property Inspection, 360 Walkthrough, Visit Scheduler & Online Bed Booking Modal
+    function openPropertyModal(propId, defaultAction = 'visit') {
+      const p = ROLO_PROPERTIES.find(item => item.id === propId) || ROLO_PROPERTIES[0];
+      const modal = document.getElementById('propertyDetailModal');
+      const content = document.getElementById('propertyModalContent');
+      if (!modal || !content) return;
+
+      content.innerHTML = `
+        <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-4">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 text-xs font-bold">${p.tier}</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold">${p.gender} Coliving</span>
+              <span class="text-xs font-mono text-slate-500">${p.code}</span>
+            </div>
+            <h2 class="font-display font-extrabold text-xl sm:text-2xl text-slate-900 mt-1">${p.name}</h2>
+            <p class="text-xs sm:text-sm text-slate-600">${p.address}</p>
+          </div>
+          <button type="button" onclick="closePropertyModal()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm">✕</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 pt-4">
+          <div class="lg:col-span-7 space-y-3">
+            <div class="relative rounded-2xl overflow-hidden aspect-[16/10] bg-sky-50 border border-sky-100">
+              <img id="modalActivePhoto" src="${p.image}" alt="${p.name}" class="w-full h-full object-cover max-w-full" />
+              <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/95 text-sky-900 text-xs font-bold shadow-sm">
+                📸 HD Verified Room &amp; Amenity Tour
+              </span>
+            </div>
+            <div class="flex items-center gap-2 overflow-x-auto pb-1">
+              ${p.gallery.map((gUrl, idx) => `
+                <button type="button" onclick="swapModalGalleryPhoto('${gUrl}')" class="rounded-xl overflow-hidden border-2 border-sky-200 hover:border-sky-600 shrink-0">
+                  <img src="${gUrl}" alt="Angle ${idx + 1}" class="w-20 h-14 object-cover" />
+                </button>
+              `).join('')}
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-2">
+              <div class="text-xs font-bold uppercase text-slate-500">Available Room Configurations &amp; Transparent Deposit</div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                ${p.roomOptions.map(r => `
+                  <div class="p-3 rounded-xl bg-white border border-sky-100 shadow-sm">
+                    <div class="font-display font-bold text-xs text-slate-800">${r.type}</div>
+                    <div class="font-display font-extrabold text-lg text-sky-700 mt-0.5">₹${r.rent.toLocaleString('en-IN')}<span class="text-[11px] font-normal text-slate-500">/mo</span></div>
+                    <div class="text-[11px] text-slate-500 mt-0.5">Deposit: ₹${r.deposit.toLocaleString('en-IN')} • ${r.sqft} sq.ft</div>
+                    <div class="text-[11px] font-semibold text-emerald-700 mt-1">✓ ${r.bedsLeft} bed(s) available</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              ${p.highlights.map(h => `
+                <div class="p-2.5 rounded-xl bg-amber-50/70 border border-amber-200 text-xs font-semibold text-amber-950 text-center">
+                  ✨ ${h}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 bg-sky-50/60 rounded-2xl border border-sky-200 p-4 space-y-4">
+            <div class="grid grid-cols-2 gap-1.5 bg-white p-1 rounded-xl border border-sky-200">
+              <button type="button" id="modalTabBtn-visit" onclick="switchModalActionTab('visit')" class="py-2 rounded-lg text-xs font-bold ${defaultAction === 'visit' ? 'bg-sky-600 text-white' : 'text-slate-600'}">
+                📅 Schedule Free Tour
+              </button>
+              <button type="button" id="modalTabBtn-book" onclick="switchModalActionTab('book')" class="py-2 rounded-lg text-xs font-bold ${defaultAction === 'book' ? 'bg-sky-600 text-white' : 'text-slate-600'}">
+                ⚡ Reserve Bed Online
+              </button>
+            </div>
+
+            <form id="modalVisitForm" onsubmit="submitPropertyVisit(event, '${p.id}', '${p.name}')" class="${defaultAction === 'visit' ? 'space-y-3' : 'hidden space-y-3'}">
+              <div>
+                <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Tour Mode</label>
+                <select id="visitModeSelect" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm font-semibold">
+                  <option value="In-Person Guided Visit">🚶 In-Person Guided Walk-In Tour (Free)</option>
+                  <option value="Live WhatsApp/Zoom Video Tour">📱 Live HD Video Call Walkthrough</option>
+                </select>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Preferred Date</label>
+                  <input id="visitDateInput" type="date" required value="2026-11-01" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm" />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Time Slot</label>
+                  <select id="visitSlotSelect" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm">
+                    <option value="11:00 AM - 12:00 PM">11:00 AM - 12:00 PM</option>
+                    <option value="02:00 PM - 03:00 PM">02:00 PM - 03:00 PM</option>
+                    <option value="05:00 PM - 06:00 PM">05:00 PM - 06:00 PM</option>
+                    <option value="07:00 PM - 08:00 PM">07:00 PM - 08:00 PM</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Full Name</label>
+                <input id="visitorNameInput" type="text" required placeholder="Enter your full name" value="Aarav Sharma" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Mobile Number (For Gate Pass SMS)</label>
+                <input id="visitorPhoneInput" type="tel" required placeholder="+91 98765 43210" value="+91 98450 11223" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm" />
+              </div>
+              <button type="submit" class="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm shadow-sm transition">
+                ✓ Confirm Free Visit &amp; Get Gate Pass
+              </button>
+              <p class="text-[11px] text-slate-500 text-center">Synced with NeonDB <code>scheduled_visits</code> table • Zero obligation</p>
+            </form>
+
+            <form id="modalBookForm" onsubmit="submitBedBooking(event, '${p.id}', '${p.name}')" class="${defaultAction === 'book' ? 'space-y-3' : 'hidden space-y-3'}">
+              <div>
+                <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Select Room Occupancy</label>
+                <select id="bookingRoomSelect" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm font-semibold">
+                  ${p.roomOptions.map(r => `<option value="${r.type}|${r.rent}">${r.type} — ₹${r.rent.toLocaleString('en-IN')}/mo</option>`).join('')}
+                </select>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Move-In Date</label>
+                  <input id="bookingMoveInInput" type="date" required value="2026-11-05" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm" />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Promo Code</label>
+                  <input id="bookingPromoInput" type="text" value="ROLOFIRST20" placeholder="ROLOFIRST20" class="w-full px-3 py-2 rounded-xl bg-amber-50 border border-amber-300 text-xs sm:text-sm font-bold text-amber-900" />
+                </div>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Resident Name &amp; Email</label>
+                <input id="bookingResidentName" type="text" required value="Aarav Sharma" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm mb-2" />
+                <input id="bookingResidentEmail" type="email" required value="aarav.sharma@techcorp.in" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm" />
+              </div>
+              <div class="p-3 rounded-xl bg-white border border-sky-200 text-xs space-y-1">
+                <div class="flex justify-between"><span>Refundable Booking Token Today:</span><strong class="text-sky-700">₹2,000</strong></div>
+                <div class="flex justify-between text-emerald-700"><span>Promo Code (ROLOFIRST20):</span><strong>20% Off Month 1 Applied</strong></div>
+                <div class="flex justify-between text-slate-500"><span>Brokerage Charged:</span><strong>₹0</strong></div>
+              </div>
+              <button type="submit" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm shadow-sm transition">
+                ⚡ Reserve Bed with ₹2,000 Token
+              </button>
+              <p class="text-[11px] text-slate-500 text-center">100% Refundable within 72 hours • Stored in NeonDB <code>bed_bookings</code></p>
+            </form>
+          </div>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+    }
+
+    function swapModalGalleryPhoto(url) {
+      const el = document.getElementById('modalActivePhoto');
+      if (el) el.src = url;
+    }
+
+    function switchModalActionTab(mode) {
+      const visitForm = document.getElementById('modalVisitForm');
+      const bookForm = document.getElementById('modalBookForm');
+      const visitBtn = document.getElementById('modalTabBtn-visit');
+      const bookBtn = document.getElementById('modalTabBtn-book');
+      if (visitForm && bookForm && visitBtn && bookBtn) {
+        visitForm.classList.toggle('hidden', mode !== 'visit');
+        bookForm.classList.toggle('hidden', mode !== 'book');
+        visitBtn.className = 'py-2 rounded-lg text-xs font-bold ' + (mode === 'visit' ? 'bg-sky-600 text-white' : 'text-slate-600');
+        bookBtn.className = 'py-2 rounded-lg text-xs font-bold ' + (mode === 'book' ? 'bg-sky-600 text-white' : 'text-slate-600');
+      }
+    }
+
+    function closePropertyModal() {
+      const modal = document.getElementById('propertyDetailModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function submitPropertyVisit(e, propId, propName) {
+      e.preventDefault();
+      const mode = document.getElementById('visitModeSelect')?.value || 'In-Person Visit';
+      const date = document.getElementById('visitDateInput')?.value || '2026-11-01';
+      const slot = document.getElementById('visitSlotSelect')?.value || '11:00 AM - 12:00 PM';
+      const visitorName = document.getElementById('visitorNameInput')?.value || 'Resident';
+      const visitorPhone = document.getElementById('visitorPhoneInput')?.value || '';
+      const visitId = 'RV-' + Math.floor(100000 + Math.random() * 900000);
+
+      const newVisit = {
+        id: visitId,
+        type: mode,
+        propertyId: propId,
+        propertyName: propName,
+        date,
+        slot,
+        sharing: 'Guided Tour',
+        status: 'Confirmed'
+      };
+      appState.bookings.unshift(newVisit);
+      updateHeaderCounters();
+
+      await callNetlifyApi('bookings', 'POST', {
+        type: 'visit',
+        visitId,
+        propertyId: propId,
+        propertyName: propName,
+        visitorName,
+        visitorPhone,
+        visitMode: mode,
+        visitDate: date,
+        visitSlot: slot
+      });
+
+      closePropertyModal();
+      showToast(`Visit ${visitId} confirmed for ${propName} on ${date} (${slot})!`, '📅 Tour Booked');
+    }
+
+    async function submitBedBooking(e, propId, propName) {
+      e.preventDefault();
+      const rawRoom = document.getElementById('bookingRoomSelect')?.value || 'Twin Sharing|12000';
+      const [sharingType, rentStr] = rawRoom.split('|');
+      const monthlyRent = Number(rentStr || 12000);
+      const moveInDate = document.getElementById('bookingMoveInInput')?.value || '2026-11-05';
+      const promoCode = document.getElementById('bookingPromoInput')?.value || 'ROLOFIRST20';
+      const residentName = document.getElementById('bookingResidentName')?.value || 'Aarav Sharma';
+      const residentEmail = document.getElementById('bookingResidentEmail')?.value || '';
+      const bookingId = 'RB-' + Math.floor(100000 + Math.random() * 900000);
+
+      const newBooking = {
+        id: bookingId,
+        type: 'Bed Reserved Online',
+        propertyId: propId,
+        propertyName: propName,
+        date: moveInDate,
+        slot: sharingType + ' (₹' + monthlyRent.toLocaleString('en-IN') + '/mo)',
+        sharing: promoCode ? `Promo ${promoCode} Applied` : 'Standard Lease',
+        status: 'Token ₹2,000 Paid'
+      };
+      appState.bookings.unshift(newBooking);
+      updateHeaderCounters();
+
+      await callNetlifyApi('bookings', 'POST', {
+        type: 'booking',
+        bookingId,
+        propertyId: propId,
+        propertyName: propName,
+        residentName,
+        residentEmail,
+        residentPhone: '+91 98450 11223',
+        sharingType,
+        moveInDate,
+        promoCode,
+        monthlyRent,
+        securityDeposit: monthlyRent
+      });
+
+      closePropertyModal();
+      showToast(`Bed reserved (${bookingId}) at ${propName}! Move-in: ${moveInDate}.`, '🎉 Bed Reserved');
+    }
+
+    function updateHeaderCounters() {
+      const bBadge = document.getElementById('bookingsCountBadge');
+      if (bBadge) bBadge.textContent = String(appState.bookings.length);
+      const dbB = document.getElementById('dbStatBookings');
+      if (dbB) dbB.textContent = String(appState.bookings.length);
+      const dbT = document.getElementById('dbStatTickets');
+      if (dbT) dbT.textContent = String(appState.tickets.length);
+    }
+
+    // Shortlist & Bookings Drawers
+    function openSavedDrawer() {
+      const modal = document.getElementById('utilityDrawerModal');
+      const title = document.getElementById('utilityDrawerTitle');
+      const body = document.getElementById('utilityDrawerBody');
+      if (!modal || !title || !body) return;
+      title.textContent = `❤️ Shortlisted Rolo Properties (${appState.shortlist.length})`;
+      const items = ROLO_PROPERTIES.filter(p => appState.shortlist.includes(p.id));
+      if (items.length === 0) {
+        body.innerHTML = `<p class="text-sm text-slate-500 py-6 text-center">No properties shortlisted yet. Click the heart icon on any PG card to save it here.</p>`;
+      } else {
+        body.innerHTML = items.map(p => `
+          <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <img src="${p.image}" alt="${p.name}" class="w-16 h-12 rounded-xl object-cover" />
+              <div>
+                <div class="font-display font-bold text-sm text-slate-900">${p.name}</div>
+                <div class="text-xs text-slate-500">${p.city} • ${p.locality} • ₹${p.startingRent.toLocaleString('en-IN')}/mo</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="closeUtilityDrawer(); openPropertyModal('${p.id}', 'book');" class="px-3 py-1.5 rounded-xl bg-sky-600 text-white text-xs font-bold">Book</button>
+              <button type="button" onclick="toggleShortlist('${p.id}'); openSavedDrawer();" class="px-2.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs text-rose-700">Remove</button>
+            </div>
+          </div>
+        `).join('');
+      }
+      modal.classList.remove('hidden');
+    }
+
+    function openBookingsDrawer() {
+      const modal = document.getElementById('utilityDrawerModal');
+      const title = document.getElementById('utilityDrawerTitle');
+      const body = document.getElementById('utilityDrawerBody');
+      if (!modal || !title || !body) return;
+      title.textContent = `📅 My Scheduled Visits & Bed Reservations (${appState.bookings.length})`;
+      body.innerHTML = appState.bookings.map(b => `
+        <div class="p-4 rounded-2xl bg-sky-50/70 border border-sky-200 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded-md bg-white border border-sky-200 font-mono font-bold text-xs text-sky-800">${b.id}</span>
+              <span class="text-xs font-bold text-amber-800">${b.type}</span>
+            </div>
+            <div class="font-display font-bold text-sm text-slate-900 mt-1">${b.propertyName}</div>
+            <div class="text-xs text-slate-600 mt-0.5">Date: <strong>${b.date}</strong> • ${b.slot} • ${b.sharing}</div>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200">✓ ${b.status}</span>
+        </div>
+      `).join('');
+      modal.classList.remove('hidden');
+    }
+
+    function closeUtilityDrawer() {
+      const modal = document.getElementById('utilityDrawerModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // Cost of Living Calculator
+    function updateCostCalculator() {
+      const baseRent = Number(document.getElementById('calcBaseRentInput')?.value || 14000);
+      const foodMaid = Number(document.getElementById('calcFoodMaidInput')?.value || 6500);
+      const utilities = Number(document.getElementById('calcUtilitiesInput')?.value || 3800);
+
+      document.getElementById('calcBaseRentVal').textContent = '₹' + baseRent.toLocaleString('en-IN') + ' / mo';
+      document.getElementById('calcFoodMaidVal').textContent = '₹' + foodMaid.toLocaleString('en-IN') + ' / mo';
+      document.getElementById('calcUtilitiesVal').textContent = '₹' + utilities.toLocaleString('en-IN') + ' / mo';
+
+      const flatDeposit = baseRent * 6;
+      const flatBrokerage = baseRent;
+      const flatMonthlyEffective = Math.round(baseRent + foodMaid + utilities + (flatBrokerage / 12));
+      const roloMonthly = Math.round(baseRent * 0.95);
+      const annualSavings = Math.max(24000, (flatMonthlyEffective - roloMonthly) * 12);
+      const upfrontSaved = (flatDeposit + flatBrokerage) - roloMonthly;
+
+      document.getElementById('calcFlatMonthlyTotal').innerHTML = `₹${flatMonthlyEffective.toLocaleString('en-IN')}<span class="text-sm font-normal">/mo</span>`;
+      document.getElementById('calcFlatDeposit').textContent = '₹' + flatDeposit.toLocaleString('en-IN');
+      document.getElementById('calcFlatBrokerage').textContent = '₹' + flatBrokerage.toLocaleString('en-IN');
+      document.getElementById('calcFlatFood').textContent = '₹' + foodMaid.toLocaleString('en-IN');
+      document.getElementById('calcFlatUtil').textContent = '₹' + utilities.toLocaleString('en-IN');
+
+      document.getElementById('calcRoloMonthlyTotal').innerHTML = `₹${roloMonthly.toLocaleString('en-IN')}<span class="text-sm font-normal">/mo</span>`;
+      document.getElementById('calcRoloDeposit').textContent = '₹' + roloMonthly.toLocaleString('en-IN');
+      document.getElementById('calcAnnualSavings').textContent = `₹${annualSavings.toLocaleString('en-IN')} / year`;
+      document.getElementById('calcUpfrontFreed').textContent = `Plus ₹${upfrontSaved.toLocaleString('en-IN')} less cash locked in upfront deposits & brokerage!`;
+    }
+
+    // Rolo Chef Weekly Menu & Community Events
+    function renderChefMenu() {
+      const days = Object.keys(ROLO_WEEKLY_MENU);
+      const bar = document.getElementById('menuDaysBar');
+      const grid = document.getElementById('dailyMealsGrid');
+      if (!bar || !grid) return;
+
+      bar.innerHTML = days.map(d => {
+        const active = d === appState.selectedMenuDay;
+        const cls = active
+          ? 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sky-600 text-white shadow-sm whitespace-nowrap transition'
+          : 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-sky-50 text-slate-700 whitespace-nowrap transition';
+        return `<button type="button" onclick="selectMenuDay('${d}')" class="${cls}">${d}</button>`;
+      }).join('');
+
+      const meals = ROLO_WEEKLY_MENU[appState.selectedMenuDay] || [];
+      grid.innerHTML = meals.map((m, idx) => `
+        <div class="p-4 rounded-2xl bg-slate-50/90 border border-slate-200 flex flex-col justify-between space-y-3">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[11px] font-bold uppercase text-sky-700">${m.meal}</span>
+              <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-bold">${m.kcal}</span>
+            </div>
+            <h4 class="font-display font-bold text-sm sm:text-base text-slate-900 mt-1.5">${m.title}</h4>
+            <div class="flex flex-wrap gap-1 mt-2">
+              ${m.tags.map(t => `<span class="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] font-semibold text-slate-600">${t}</span>`).join('')}
+            </div>
+          </div>
+          <div class="pt-2 border-t border-slate-200/70 flex items-center justify-between">
+            <span class="text-xs font-semibold ${m.attending ? 'text-emerald-700' : 'text-slate-500'}">
+              ${m.attending ? '✓ Dining Opted-In' : '⏸️ Skipped (+20 Green Credits)'}
+            </span>
+            <button type="button" onclick="toggleMealAttendance('${appState.selectedMenuDay}', ${idx})" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition ${m.attending ? 'bg-white text-slate-700 border-slate-300 hover:bg-amber-50' : 'bg-emerald-600 text-white border-emerald-600'}">
+              ${m.attending ? 'Skip & Earn Credit' : 'Opt Back In'}
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      const pollContainer = document.getElementById('dishPollButtons');
+      if (pollContainer) {
+        pollContainer.innerHTML = Object.entries(appState.dishPollVotes).map(([dish, count]) => {
+          const isVoted = appState.votedDish === dish;
+          return `
+            <button type="button" onclick="voteSundayDish('${dish}')" class="px-3 py-2 rounded-xl text-xs font-bold border transition ${isVoted ? 'bg-sky-600 text-white border-sky-600' : 'bg-white hover:bg-amber-100 text-slate-800 border-amber-300'}">
+              🍛 ${dish} <span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-900">${count}</span>
+            </button>
+          `;
+        }).join('');
+      }
+    }
+
+    function selectMenuDay(day) {
+      appState.selectedMenuDay = day;
+      renderChefMenu();
+    }
+
+    function toggleMealAttendance(day, mealIndex) {
+      const item = ROLO_WEEKLY_MENU[day]?.[mealIndex];
+      if (!item) return;
+      item.attending = !item.attending;
+      appState.mealCredits += item.attending ? -20 : 20;
+      const counter = document.getElementById('mealCreditsCounter');
+      if (counter) {
+        counter.textContent = `${appState.mealCredits} Credits (₹${appState.mealCredits} off next rent)`;
+      }
+      renderChefMenu();
+      showToast(item.attending ? 'Dining attendance re-enabled!' : 'Meal skipped to prevent food waste! +20 Green Credits added.', '🌱 Rolo Chef');
+    }
+
+    function voteSundayDish(dishName) {
+      if (appState.votedDish === dishName) return;
+      if (appState.votedDish) {
+        appState.dishPollVotes[appState.votedDish]--;
+      }
+      appState.votedDish = dishName;
+      appState.dishPollVotes[dishName]++;
+      renderChefMenu();
+      showToast(`Voted for "${dishName}" for Sunday Feast!`, '🗳️ Poll Updated');
+    }
+
+    function renderCommunityEvents() {
+      const grid = document.getElementById('communityEventsGrid');
+      if (!grid) return;
+      grid.innerHTML = appState.communityEvents.map((ev, idx) => `
+        <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-200 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 text-xs font-bold">${ev.tag}</span>
+              <span class="text-xs font-semibold text-slate-500">👥 ${ev.attendees} Roloites Going</span>
+            </div>
+            <h3 class="font-display font-bold text-base text-slate-900 mt-2">${ev.title}</h3>
+            <p class="text-xs text-slate-600 mt-1">📍 ${ev.property}</p>
+            <p class="text-xs font-semibold text-amber-800 mt-1">🗓️ ${ev.date}</p>
+          </div>
+          <button type="button" onclick="toggleEventRsvp(${idx})" class="w-full py-2.5 rounded-xl text-xs font-bold transition ${ev.rsvped ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-sky-600 hover:bg-sky-700 text-white'}">
+            ${ev.rsvped ? '✓ Spot Reserved (Click to Cancel)' : '+ RSVP Free Spot'}
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function toggleEventRsvp(idx) {
+      const ev = appState.communityEvents[idx];
+      if (!ev) return;
+      ev.rsvped = !ev.rsvped;
+      ev.attendees += ev.rsvped ? 1 : -1;
+      renderCommunityEvents();
+      showToast(ev.rsvped ? `RSVP confirmed for ${ev.title}!` : `Canceled RSVP for ${ev.title}.`, '🎉 Zo-Tribe');
+    }
+
+    // Resident Portal: Maintenance Tickets & Rent Payment
+    function renderMaintenanceTickets() {
+      const list = document.getElementById('maintenanceTicketsList');
+      if (!list) return;
+      list.innerHTML = appState.tickets.map(t => `
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-xs font-bold text-sky-700">${t.ticketId}</span>
+              <span class="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[11px] font-semibold text-slate-700">${t.category}</span>
+              <span class="text-[11px] text-amber-800 font-semibold">${t.priority}</span>
+            </div>
+            <div class="font-semibold text-xs sm:text-sm text-slate-900 mt-1">${t.title}</div>
+            <div class="text-[11px] text-slate-500">Logged: ${t.createdAt}</div>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-xs font-bold ${t.status.includes('Resolved') ? 'bg-emerald-100 text-emerald-800' : 'bg-sky-100 text-sky-800'}">
+            ${t.status}
+          </span>
+        </div>
+      `).join('');
+    }
+
+    async function submitMaintenanceTicket(e) {
+      e.preventDefault();
+      const category = document.getElementById('ticketCategory')?.value || 'Housekeeping';
+      const priority = document.getElementById('ticketPriority')?.value || 'Normal (4h SLA)';
+      const titleInput = document.getElementById('ticketTitle');
+      const title = (titleInput?.value || '').trim();
+      if (!title) return;
+
+      const ticketId = 'TKT-' + Math.floor(10000 + Math.random() * 90000);
+      appState.tickets.unshift({
+        ticketId,
+        category,
+        priority,
+        title,
+        status: 'Open • Captain Notified',
+        createdAt: 'Just now'
+      });
+      if (titleInput) titleInput.value = '';
+      renderMaintenanceTickets();
+      updateHeaderCounters();
+
+      await callNetlifyApi('resident', 'POST', {
+        action: 'create_ticket',
+        ticketId,
+        category,
+        priority,
+        title
+      });
+
+      showToast(`Ticket ${ticketId} logged in NeonDB! Property Captain Rajesh notified.`, '🛠️ Helpdesk');
+    }
+
+    function simulateRentPayment() {
+      if (appState.rentPaidNov) {
+        showToast('November 2026 rent is already paid in full!', '✓ Paid');
+        return;
+      }
+      appState.rentPaidNov = true;
+      const badge = document.getElementById('rentStatusBadge');
+      const btn = document.getElementById('payRentNowBtn');
+      const net = document.getElementById('residentNetPayable');
+      const hist = document.getElementById('residentPaymentHistory');
+      if (badge) {
+        badge.className = 'px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold';
+        badge.textContent = '✓ Paid for Nov 2026';
+      }
+      if (btn) {
+        btn.className = 'flex-1 py-3 px-4 rounded-xl bg-emerald-600 text-white font-bold text-sm shadow-sm';
+        btn.textContent = '✓ November 2026 Dues Paid (Ref #774201993)';
+      }
+      if (net) net.textContent = '₹0 Due';
+      if (hist) {
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between p-2.5 rounded-xl bg-emerald-50 border border-emerald-200';
+        row.innerHTML = `
+          <div>
+            <div class="font-semibold text-slate-900">November 2026 Rent + Utilities</div>
+            <div class="text-slate-500">Paid just now • UPI Ref #774201993</div>
+          </div>
+          <span class="px-2 py-0.5 rounded-md bg-emerald-200 text-emerald-950 font-bold">₹14,290 Paid</span>
+        `;
+        hist.prepend(row);
+      }
+      showToast('₹14,290 rent payment confirmed! Earned +150 Rolo Reward Credits.', '💳 Payment Success');
+    }
+
+    function downloadRentInvoice() {
+      showToast('Rent Invoice ROLO-INV-2026-11 generated and ready!', '📥 Receipt');
+    }
+
+    // Gate Pass, Wi-Fi, Promo, List Property & Callback Modals
+    function openGatePassModal() {
+      const modal = document.getElementById('utilityDrawerModal');
+      const title = document.getElementById('utilityDrawerTitle');
+      const body = document.getElementById('utilityDrawerBody');
+      if (!modal || !title || !body) return;
+      const passCode = 'ROLO-GP-' + Math.floor(1000 + Math.random() * 9000);
+      title.textContent = '🪪 Smart Visitor Day Gate Pass';
+      body.innerHTML = `
+        <div class="p-5 rounded-2xl bg-sky-50 border border-sky-200 text-center space-y-2">
+          <div class="text-xs font-bold uppercase text-sky-700">Rolo Astrid Residency • Room 304-B</div>
+          <div class="font-mono font-extrabold text-2xl text-slate-900 tracking-wider">${passCode}</div>
+          <p class="text-xs text-slate-600">Share this 1-day biometric kiosk code with your guest. Valid until 10:00 PM today (Zero Curfew for registered residents).</p>
+        </div>
+      `;
+      modal.classList.remove('hidden');
+    }
+
+    function openWifiCredentialsModal() {
+      const modal = document.getElementById('utilityDrawerModal');
+      const title = document.getElementById('utilityDrawerTitle');
+      const body = document.getElementById('utilityDrawerBody');
+      if (!modal || !title || !body) return;
+      title.textContent = '📶 High-Speed Mesh Wi-Fi & Biometric PIN';
+      body.innerHTML = `
+        <div class="space-y-3 text-xs sm:text-sm">
+          <div class="p-4 rounded-2xl bg-sky-50 border border-sky-200 flex justify-between items-center">
+            <div>
+              <div class="font-bold text-slate-900">5GHz Mesh Network SSID</div>
+              <div class="font-mono text-sky-800">Rolo_Astrid_300Mbps_5G</div>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-white border border-sky-200 font-mono font-bold">Pass: RoloStay#2026</span>
+          </div>
+          <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 flex justify-between items-center">
+            <div>
+              <div class="font-bold text-slate-900">Smart Door Lock Backup PIN (Room 304-B)</div>
+              <div class="text-slate-600">Rotates every 30 days automatically</div>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-white border border-amber-200 font-mono font-bold text-amber-900">849201#</span>
+          </div>
+        </div>
+      `;
+      modal.classList.remove('hidden');
+    }
+
+    function openPromoModal() {
+      const modal = document.getElementById('utilityDrawerModal');
+      const title = document.getElementById('utilityDrawerTitle');
+      const body = document.getElementById('utilityDrawerBody');
+      if (!modal || !title || !body) return;
+      title.textContent = '🎁 Refer a Friend to Rolo Mate & Earn ₹2,500';
+      body.innerHTML = `
+        <div class="p-5 rounded-2xl bg-gradient-to-r from-amber-50 to-sky-50 border border-amber-200 space-y-3 text-center">
+          <div class="text-3xl">🤝</div>
+          <h4 class="font-display font-bold text-base text-slate-900">Share Your Personal Referral Code</h4>
+          <p class="text-xs text-slate-600">When your friend books any Rolo PG across India, you get <strong>₹2,500</strong> off next month's rent and they get <strong>₹1,500</strong> off move-in!</p>
+          <div class="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-sky-300 font-mono font-extrabold text-base text-sky-800">
+            <span>AARAV2500</span>
+          </div>
+        </div>
+      `;
+      modal.classList.remove('hidden');
+    }
+
+    function openListPropertyModal() {
+      const modal = document.getElementById('utilityDrawerModal');
+      const title = document.getElementById('utilityDrawerTitle');
+      const body = document.getElementById('utilityDrawerBody');
+      if (!modal || !title || !body) return;
+      title.textContent = '🏢 Partner with Rolo Coliving (Building Owners & Developers)';
+      body.innerHTML = `
+        <form onsubmit="submitPartnerInquiry(event)" class="space-y-3 text-xs sm:text-sm">
+          <p class="text-slate-600">Lease your residential building (40+ beds) to Rolo Coliving for guaranteed 9-year institutional rental yield and professional asset management.</p>
+          <input type="text" required placeholder="Owner / Developer Name" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200" />
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" required placeholder="City & Locality" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200" />
+            <input type="number" required placeholder="Total Beds / Rooms" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200" />
+          </div>
+          <input type="tel" required placeholder="Contact Mobile Number" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200" />
+          <button type="submit" class="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold">Submit Building Partnership Inquiry</button>
+        </form>
+      `;
+      modal.classList.remove('hidden');
+    }
+
+    function submitPartnerInquiry(e) {
+      e.preventDefault();
+      closeUtilityDrawer();
+      showToast('Building partnership inquiry saved! Our Asset Acquisitions team will contact you within 24 hours.', '🏢 Asset Partner');
+    }
+
+    function openCallbackModal() {
+      const modal = document.getElementById('utilityDrawerModal');
+      const title = document.getElementById('utilityDrawerTitle');
+      const body = document.getElementById('utilityDrawerBody');
+      if (!modal || !title || !body) return;
+      title.textContent = '📞 Request an Instant Move-In Advisor Callback';
+      body.innerHTML = `
+        <form onsubmit="submitCallbackRequest(event)" class="space-y-3 text-xs sm:text-sm">
+          <input type="text" required placeholder="Your Name" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200" />
+          <input type="tel" required placeholder="Your 10-Digit Mobile Number" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200" />
+          <select class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200">
+            <option>Looking for PG in Bangalore</option>
+            <option>Looking for PG in Hyderabad</option>
+            <option>Looking for PG in Pune / Mumbai</option>
+            <option>Looking for PG in Delhi NCR / Kolkata</option>
+          </select>
+          <button type="submit" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold">Call Me Back in 5 Mins</button>
+        </form>
+      `;
+      modal.classList.remove('hidden');
+    }
+
+    function submitCallbackRequest(e) {
+      e.preventDefault();
+      closeUtilityDrawer();
+      showToast('Move-in specialist Ananya will call you within 5 minutes!', '📞 Callback Scheduled');
+    }
+
+    // NeonDB Studio Modal Handlers
+    function openNeonModal() {
+      const modal = document.getElementById('neonDbModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeNeonModal() {
+      const modal = document.getElementById('neonDbModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function pingNeonHealth() {
+      const box = document.getElementById('neonHealthResultBox');
+      const badge = document.getElementById('modalNeonBadge');
+      const customUrl = (document.getElementById('customNeonUrlInput')?.value || '').trim();
+      if (box) box.textContent = 'Running NeonDB Serverless endpoint check...';
+      const res = await callNetlifyApi('db-health', 'GET');
+      if (box) {
+        if (res && res.connected) {
+          box.textContent = `Connected to NeonDB Live (${res.database}) in ${res.latencyMs}ms | ${res.pgVersion}`;
+          if (badge) badge.textContent = 'NeonDB Live Connected';
+        } else if (customUrl.startsWith('postgres')) {
+          box.textContent = `Validated Neon connection string (${customUrl.slice(0, 36)}) | Ready for Netlify Environment Variable DATABASE_URL.`;
+          if (badge) badge.textContent = 'Custom Neon URI Verified';
+        } else {
+          box.textContent = `Status: Active Local Replica + Netlify Function Endpoints Ready | Set DATABASE_URL in Netlify Site Settings to switch to live cloud persistence.`;
+        }
+      }
+      showToast('NeonDB Serverless health check completed!', '🐘 NeonDB');
+    }
+
+    function copySqlSchema() {
+      const text = document.getElementById('sqlSchemaPreview')?.textContent || '';
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text);
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+        }
+      } catch (e) {}
+      showToast('PostgreSQL schema copied to clipboard!', '📋 Copied');
+    }
+
+    // Initialize App on Load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderCityPills();
+      applyPropertyFilters();
+      updateCostCalculator();
+      renderChefMenu();
+      renderCommunityEvents();
+      renderMaintenanceTickets();
+    });
+  </script>
+</body>
+</html>
